@@ -1,11 +1,10 @@
-# Gamocologist's Discord Bot
+# Translation Bot
 
-This is a bot that is used to help the Gamocologists with their Discord server.
-For now, it includes the following functional modules:
+Derived from GamocologistsBot's Translation module, 
+this discord bot provides translation using the DeepL 
+translation engine.
 
-### **Translation**
-
-This module is used to translate text from one language to another.
+This bot is used to translate text from one language to another.
 It has two general purpose commands:
 
 -> **§translate** - Translates text from an autodetected language to another specified language.
