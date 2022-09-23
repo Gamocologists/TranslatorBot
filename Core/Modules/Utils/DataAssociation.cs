@@ -7,7 +7,7 @@ using System.Text;
 
 namespace TranslatorBot.Modules.Utils;
 
-public class DataAssociation
+public sealed class DataAssociation
 {
     private Dictionary<string, string> _data;
     private string _path;
