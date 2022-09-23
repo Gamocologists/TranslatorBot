@@ -11,17 +11,20 @@ namespace TranslatorBot.Modules.Translation
         /// <summary>
         ///     The function removes all unwanted symbols from a string and returns the result.
         /// </summary>
-        /// <param name="input">The string to remove the unwanted symbols from.</param>
+        /// <param name="input">
+        ///     The string to remove the unwanted symbols from.
+        /// </param>
         /// <param name="undesiredSymbols">
         ///     The unwanted symbols.
         ///     By default, this parameter contains the following list of unwanted symbols:
-        ///     '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'.
+        ///     '\n' (new line character), '\t' (tabulation character), ' ' (space character),
+        ///     '-' and '_'.
         /// </param>
         /// <returns>
         ///     A string based on the <see cref="input" /> string without the undesired
-        ///     symbols specified in <see cref="undesiredSymbols" />
+        ///     symbols specified in <see cref="undesiredSymbols" />.
         /// </returns>
-        internal static string RemoveUndesiredSymbols(string input, char[] undesiredSymbols = null)
+        internal static string RemoveUndesiredSymbols(string input, char[]? undesiredSymbols = null)
         {
             undesiredSymbols ??= new[] { '\n', '\t', ' ', '-', '_', '(', ')' };
             HashSet<char> undesiredSymbolsSet = BuildUndesiredSymbolsHashSet(undesiredSymbols);
@@ -38,8 +41,12 @@ namespace TranslatorBot.Modules.Translation
         /// <summary>
         ///     Builds the undesired symbols hash set used by the <see cref="RemoveUndesiredSymbols" /> function.
         /// </summary>
-        /// <param name="undesiredSymbols">The undesired symbols passed into the <see cref="RemoveUndesiredSymbols" /> function.</param>
-        /// <returns>A hashset containing the undesired symbols passed into the <see cref="undesiredSymbols" /></returns>
+        /// <param name="undesiredSymbols">
+        ///     The undesired symbols passed into the <see cref="RemoveUndesiredSymbols" /> function.
+        /// </param>
+        /// <returns>
+        ///     A hashset containing the undesired symbols passed into the <see cref="undesiredSymbols" />
+        /// </returns>
         private static HashSet<char> BuildUndesiredSymbolsHashSet(char[] undesiredSymbols)
         {
             HashSet<char> undesiredSymbolsSet = new HashSet<char>();
@@ -56,13 +63,19 @@ namespace TranslatorBot.Modules.Translation
         ///     It will cut off early if it can't fit the sentence in.
         ///     Also after starting a new block, any whitespace in front of the first sentence is cleared.
         /// </summary>
-        /// <param name="text">The text to divide up.</param>
-        /// <param name="maxLength">The length of the blocks. By default, this value is set to 1024.</param>
+        /// <param name="text">
+        ///     The text to divide up.
+        /// </param>
+        /// <param name="maxLength">
+        ///     The length of the blocks. By default, this value is set to 1024.
+        /// </param>
         /// <param name="initialText">
         ///     An optional initialText that will be inserted at the beginning
         ///     and counted as part of the first block.
         /// </param>
-        /// <returns>A <see cref="List{T}" /> containing strings which are the divided up blocks.</returns>
+        /// <returns>
+        ///     A <see cref="List{T}" /> containing strings which are the divided up blocks.
+        /// </returns>
         internal static List<string> DivideUpTextIntoFragmentsNicely(string text, int maxLength = 1024,
             string initialText = "")
         {
@@ -100,11 +113,21 @@ namespace TranslatorBot.Modules.Translation
         ///     is to divide up the text nicely as described in the <see cref="DivideUpTextIntoFragmentsNicely" /> function.
         ///     It also updates all necessary objects.
         /// </summary>
-        /// <param name="maxLength">The maximum size of the blocks</param>
-        /// <param name="segmentBuilder">The <see cref="StringBuilder" /> used to build the current block.</param>
-        /// <param name="segments">The current <see cref="List{T}" /> of blocks.</param>
-        /// <param name="lastPeriod">The index in the text of the last period.</param>
-        /// <returns>The new value for the local index which is the current index inside the current block.</returns>
+        /// <param name="maxLength">
+        ///     The maximum size of the blocks.
+        /// </param>
+        /// <param name="segmentBuilder">
+        ///     The <see cref="StringBuilder" /> used to build the current block.
+        /// </param>
+        /// <param name="segments">
+        ///     The current <see cref="List{T}" /> of blocks.
+        /// </param>
+        /// <param name="lastPeriod">
+        ///     The index in the text of the last period.
+        /// </param>
+        /// <returns>
+        ///     The new value for the local index which is the current index inside the current block.
+        /// </returns>
         private static int SplitTextUpNicely(int maxLength, StringBuilder segmentBuilder, List<string> segments,
             ref int lastPeriod)
         {

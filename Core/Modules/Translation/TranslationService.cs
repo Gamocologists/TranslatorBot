@@ -40,9 +40,15 @@ namespace TranslatorBot.Modules.Translation
         /// <summary>
         ///     Translates a text from a language into another language using the DeepL engine.
         /// </summary>
-        /// <param name="text">The text to be translated.</param>
-        /// <param name="inputLanguageCode">The language code of the text to be translated.</param>
-        /// <param name="outputLanguageCode">The language code of the desired translated text.</param>
+        /// <param name="text">
+        ///     The text to be translated.
+        /// </param>
+        /// <param name="inputLanguageCode">
+        ///     The language code of the text to be translated.
+        /// </param>
+        /// <param name="outputLanguageCode">
+        ///     The language code of the desired translated text.
+        /// </param>
         /// <returns>
         ///     A <see cref="Task{TResult}" /> containing a tuple with two strings.
         ///     The first string contains the translated text.
@@ -69,7 +75,10 @@ namespace TranslatorBot.Modules.Translation
         ///     Tries to read the authentication key from "translator.txt".
         ///     Tries to connect to the engine. Updates <see cref="IsTranslatorOperational" /> accordingly.
         /// </summary>
-        /// <returns>The set up translator. If the value is null, then the operation was unsuccessful</returns>
+        /// <returns>
+        ///     The setup <see cref="_translator"/> object.
+        ///     If the value is null, then the operation was unsuccessful.
+        /// </returns>
         private static Translator? TranslatorSetUp()
         {
             DataAssociation dataAssociation =
@@ -97,7 +106,10 @@ namespace TranslatorBot.Modules.Translation
         /// <summary>
         ///     Tries to reconnect the translator to the translation engine via the translation API.
         /// </summary>
-        /// <returns>True if the reconnection was successful. False if the reconnection was a failure.</returns>
+        /// <returns>
+        ///     True if the reconnection was successful.
+        ///     False if the reconnection was a failure.
+        /// </returns>
         internal static bool ReconnectToDeepL()
         {
             _translator = TranslatorSetUp();

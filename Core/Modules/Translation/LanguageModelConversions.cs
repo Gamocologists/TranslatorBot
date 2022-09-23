@@ -7,8 +7,8 @@
     {
         /// <summary>
         ///     Converts a <see cref="string" /> representing a language into a <see cref="Language" />.
-        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
-        ///     characters present in the string are not taken into account when identifying the language.
+        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ' (space character),
+        ///     '-' and '_' characters present in the string are not taken into account when identifying the language.
         ///     Both language names and language codes are parsable.
         /// </summary>
         /// <param name="str">
@@ -100,8 +100,8 @@
 
         /// <summary>
         ///     Converts a string representing a language as its string into its language code.
-        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
-        ///     characters present in the string are not taken into account when identifying the language.
+        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ' (space character),
+        ///     '-' and '_' characters present in the string are not taken into account when identifying the language.
         /// </summary>
         /// <param name="languageStr">
         ///     A <see cref="string" /> representing a language.
@@ -168,7 +168,9 @@
         /// <summary>
         ///     Converts a <see cref="Language" /> into its corresponding language code.
         /// </summary>
-        /// <param name="language">The <see cref="Language" /> to convert.</param>
+        /// <param name="language">
+        ///     The <see cref="Language" /> to convert.
+        /// </param>
         /// <returns>
         ///     The corresponding language code.
         ///     "AUTOMATIC" corresponds to <see cref="Language.AUTO_DETECT" /> and represents a
