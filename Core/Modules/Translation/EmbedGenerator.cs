@@ -6,18 +6,18 @@ using Discord;
 namespace TranslatorBot.Modules.Translation;
 
 /// <summary>
-/// Contains methods for generating bot responses as embedded messages.
+///     Contains methods for generating bot responses as embedded messages.
 /// </summary>
 public static class EmbedGenerator
 {
     /// <summary>
-    /// Generates an embed for when the language is not recognized.
+    ///     Generates an embed for when the language is not recognized.
     /// </summary>
     /// <param name="languageInput">
-    /// The language provided and not recognized.
+    ///     The language provided and not recognized.
     /// </param>
     /// <returns>
-    /// The generated embed.
+    ///     The generated embed.
     /// </returns>
     internal static Embed GenerateUnknownLanguageEmbed(string languageInput)
     {
@@ -43,10 +43,10 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    /// Generates a basic embed builder to be used in other embed generators.
+    ///     Generates a basic embed builder to be used in other embed generators.
     /// </summary>
     /// <returns>
-    /// A basic embed builder to be used in other embed generators.
+    ///     A basic embed builder to be used in other embed generators.
     /// </returns>
     private static EmbedBuilder BuildBotEmbedBase()
     {
@@ -64,27 +64,28 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    /// Generates the author information for use in embeds.
+    ///     Generates the author information for use in embeds.
     /// </summary>
     /// <returns>
-    /// An embed author builder containing the author information for use in embeds.
+    ///     An embed author builder containing the author information for use in embeds.
     /// </returns>
     private static EmbedAuthorBuilder GenerateBotAuthor()
     {
         EmbedAuthorBuilder embedAuthorBuilder = new EmbedAuthorBuilder
         {
             Name = "GamoTranslate",
-            IconUrl = "https://www.google.com/url?sa=i&url=https%3A%2F%2Fapitracker.io%2Fa%2Fdeepl&psig=AOvVaw028t84t0CBC87q4q-IuCMc&ust=1650642593447000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCMDqzf3ApfcCFQAAAAAdAAAAABAO",
+            IconUrl =
+                "https://www.google.com/url?sa=i&url=https%3A%2F%2Fapitracker.io%2Fa%2Fdeepl&psig=AOvVaw028t84t0CBC87q4q-IuCMc&ust=1650642593447000&source=images&cd=vfe&ved=0CAwQjRxqFwoTCMDqzf3ApfcCFQAAAAAdAAAAABAO",
             Url = "https://gamocologist.com/bots/gamotranslator"
         };
         return embedAuthorBuilder;
     }
 
     /// <summary>
-    /// Generate a text that contains all possible languages for translation.
+    ///     Generate a text that contains all possible languages for translation.
     /// </summary>
     /// <returns>
-    /// return a string that contains all possible languages for translation.
+    ///     return a string that contains all possible languages for translation.
     /// </returns>
     private static string GeneratePossibleLanguages()
     {
@@ -123,26 +124,26 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    /// Generates a text containing the translation result 
+    ///     Generates a text containing the translation result
     /// </summary>
     /// <param name="languageCodeSource">
-    /// The language code of the language to be translated.
+    ///     The language code of the language to be translated.
     /// </param>
     /// <param name="languageCodeDestination">
-    /// The language code of the language the text is translated to.
+    ///     The language code of the language the text is translated to.
     /// </param>
     /// <param name="isAutomatic">
-    /// Indicates whether the <see cref="languageCodeSource"/> was detected automatically
-    /// by the translation engine. True if it was. False if it was not.
+    ///     Indicates whether the <see cref="languageCodeSource" /> was detected automatically
+    ///     by the translation engine. True if it was. False if it was not.
     /// </param>
     /// <param name="translationResult">
-    /// A tuple containing the result from the translation engine.
-    /// The first element of the tuple is a <see cref="string"/> which contains the translated text.
-    /// The second element of the tuple is a <see cref="string"/> which contains the language code of the detected
-    /// language of the text that was given to be translated.
+    ///     A tuple containing the result from the translation engine.
+    ///     The first element of the tuple is a <see cref="string" /> which contains the translated text.
+    ///     The second element of the tuple is a <see cref="string" /> which contains the language code of the detected
+    ///     language of the text that was given to be translated.
     /// </param>
     /// <returns>
-    /// Return an <see cref="Embed"/> that contains the translation result.
+    ///     Return an <see cref="Embed" /> that contains the translation result.
     /// </returns>
     internal static Embed GenerateTranslationResultEmbed(string languageCodeSource, string languageCodeDestination,
         bool isAutomatic, (string translatedText, string detectedSourceLanguageCode) translationResult)
@@ -193,10 +194,10 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    /// Generates a message that indicates that the API's 500000 character/month translation limit has been reached.
+    ///     Generates a message that indicates that the API's 500000 character/month translation limit has been reached.
     /// </summary>
     /// <returns>
-    /// An <see cref="Embed"/> that indicates that the API's 500000 character/month translation limit has been reached.
+    ///     An <see cref="Embed" /> that indicates that the API's 500000 character/month translation limit has been reached.
     /// </returns>
     internal static Embed GenerateLimitReachedEmbed()
     {
@@ -215,13 +216,13 @@ public static class EmbedGenerator
         Embed limitReachedEmbed = limitReachedEmbedBuilder.Build();
         return limitReachedEmbed;
     }
- 
+
     /// <summary>
-    /// Generates a response to a translation request where no text was provided for translation.
+    ///     Generates a response to a translation request where no text was provided for translation.
     /// </summary>
     /// <returns>
-    /// An <see cref="Embed"/> containing a response to a translation request
-    /// where no text was provided for translation.
+    ///     An <see cref="Embed" /> containing a response to a translation request
+    ///     where no text was provided for translation.
     /// </returns>
     internal static Embed GenerateEmptyTextEmbed()
     {
@@ -242,13 +243,13 @@ public static class EmbedGenerator
         Embed generateEmptyTextEmbed = limitReachedEmbedBuilder.Build();
         return generateEmptyTextEmbed;
     }
-        
+
     /// <summary>
-    /// Generates a message informing that the API wasn't successfully
+    ///     Generates a message informing that the API wasn't successfully
     /// </summary>
     /// <returns>
-    /// An <see cref="Embed"/> containing a message informing that the authentication
-    /// key was missing for the API.
+    ///     An <see cref="Embed" /> containing a message informing that the authentication
+    ///     key was missing for the API.
     /// </returns>
     internal static Embed GenerateApiConnectionErrorEmbed()
     {
@@ -268,13 +269,13 @@ public static class EmbedGenerator
         Embed apiConnectionErrorEmbed = apiErrorConnectionErrorEmbedBuilder.Build();
         return apiConnectionErrorEmbed;
     }
-        
+
     /// <summary>
-    /// Generates a message informing that the API wasn't successfully
+    ///     Generates a message informing that the API wasn't successfully
     /// </summary>
     /// <returns>
-    /// An <see cref="Embed"/> containing a message informing that the authentication
-    /// key was missing for the API.
+    ///     An <see cref="Embed" /> containing a message informing that the authentication
+    ///     key was missing for the API.
     /// </returns>
     internal static Embed GenerateReconnectionEmbed(bool wasSuccessful)
     {
@@ -282,11 +283,11 @@ public static class EmbedGenerator
 
         EmbedFieldBuilder reconnectionEmbedField = new EmbedFieldBuilder
         {
-            Name = wasSuccessful 
+            Name = wasSuccessful
                 ? "Reconnection to DeepL API was successful."
                 : "Authentication failure when reconnecting to DeepL API.",
             IsInline = false,
-            Value = wasSuccessful 
+            Value = wasSuccessful
                 ? "The reconnection to the DeepL API servers was successful."
                 : "The bot failed to reconnect to the DeepL API servers."
         };

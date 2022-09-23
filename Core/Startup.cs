@@ -53,7 +53,7 @@ public class Startup
         });
 
         //Bot = new Bot(bot);
-            
+
         services.AddSingleton(bot)
             .AddSingleton(new CommandService(new CommandServiceConfig
             {

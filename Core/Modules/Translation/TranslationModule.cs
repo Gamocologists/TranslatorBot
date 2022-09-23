@@ -25,14 +25,14 @@ namespace TranslatorBot.Modules.Translation
                 await ReplyAsync(embed: failedApiEmbed);
                 return;
             }
-            
+
             if (text.Length == 0)
             {
                 Embed emptyTextEmbed = EmbedGenerator.GenerateEmptyTextEmbed();
                 await ReplyAsync(embed: emptyTextEmbed);
                 return;
             }
-            
+
             if (await TranslationService.HasReachedCap())
             {
                 Embed reachedLimitEmbed = EmbedGenerator.GenerateLimitReachedEmbed();
@@ -42,10 +42,10 @@ namespace TranslatorBot.Modules.Translation
 
             string languageCodeSource = LanguageModelConversions.ConvertToLanguageCode(inputLanguage);
             string languageCodeDestination = LanguageModelConversions.ConvertToLanguageCode(targetLanguage);
-            
+
             if (languageCodeSource.Length == 5)
                 languageCodeSource = languageCodeSource.Remove(2, 3);
-            
+
             if (languageCodeDestination == "UNKNOWN")
             {
                 Embed unknownLanguageEmbed = EmbedGenerator.GenerateUnknownLanguageEmbed(targetLanguage);

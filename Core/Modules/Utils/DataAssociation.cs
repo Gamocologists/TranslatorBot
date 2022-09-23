@@ -9,35 +9,14 @@ namespace TranslatorBot.Modules.Utils
 {
     public class DataAssociation
     {
-        private string _path;
         private Dictionary<string, string> _data;
-        private int _numberOfPropreties;
+        private string _path;
 
         private DataAssociation()
         {
             _path = "";
             _data = new Dictionary<string, string>();
-            _numberOfPropreties = 0;
-        }
-
-        public static DataAssociation FromData(string data)
-        {
-            DataAssociation dataAssociation = new();
-            dataAssociation.Path = "";
-            (Dictionary<string, string> data, int numberOfProperties) parsedData = LoadFromData(data);
-            dataAssociation._data = parsedData.data;
-            dataAssociation._numberOfPropreties = parsedData.numberOfProperties;
-            return dataAssociation;
-        }
-
-        public static DataAssociation FromFile(string path)
-        {
-            DataAssociation dataAssociation = new();
-            dataAssociation._path = path;
-            (Dictionary<string, string> data, int numberOfProperties) parsedData = LoadOrCreate(path);
-            dataAssociation._data = parsedData.data;
-            dataAssociation._numberOfPropreties = parsedData.numberOfProperties;
-            return dataAssociation;
+            Count = 0;
         }
 
         public string Path
@@ -46,10 +25,7 @@ namespace TranslatorBot.Modules.Utils
             internal set
             {
                 _path = value;
-                if (!FileExists())
-                {
-                    File.Create(value);
-                }
+                if (!FileExists()) File.Create(value);
             }
         }
 
@@ -64,7 +40,7 @@ namespace TranslatorBot.Modules.Utils
             }
         }
 
-        public int Count => _numberOfPropreties;
+        public int Count { get; private set; }
 
         public string this[string proprety]
         {
@@ -76,13 +52,33 @@ namespace TranslatorBot.Modules.Utils
 
         public Dictionary<string, string>.ValueCollection Values => new(Data);
 
+        public static DataAssociation FromData(string data)
+        {
+            DataAssociation dataAssociation = new();
+            dataAssociation.Path = "";
+            (Dictionary<string, string> data, int numberOfProperties) parsedData = LoadFromData(data);
+            dataAssociation._data = parsedData.data;
+            dataAssociation.Count = parsedData.numberOfProperties;
+            return dataAssociation;
+        }
+
+        public static DataAssociation FromFile(string path)
+        {
+            DataAssociation dataAssociation = new();
+            dataAssociation._path = path;
+            (Dictionary<string, string> data, int numberOfProperties) parsedData = LoadOrCreate(path);
+            dataAssociation._data = parsedData.data;
+            dataAssociation.Count = parsedData.numberOfProperties;
+            return dataAssociation;
+        }
+
         public bool AddProprety(string propretyName, string value)
         {
             bool wasAdded = true;
             try
             {
                 _data.Add(propretyName, value);
-                _numberOfPropreties += 1;
+                Count += 1;
                 SaveData(Path, _data);
             }
             catch (ArgumentException)
@@ -96,7 +92,7 @@ namespace TranslatorBot.Modules.Utils
         public void ClearProprety()
         {
             _data.Clear();
-            _numberOfPropreties = 0;
+            Count = 0;
         }
 
         public bool ContainsPropertyName(string propertyName)
@@ -123,7 +119,7 @@ namespace TranslatorBot.Modules.Utils
         {
             _data.GetObjectData(info, context);
         }
-        
+
         public virtual void OnPropretyDeserialization(object? sender)
         {
             _data.OnDeserialization(sender);
@@ -133,7 +129,7 @@ namespace TranslatorBot.Modules.Utils
         {
             bool wasRemoved = _data.Remove(propertyName);
             if (wasRemoved)
-                _numberOfPropreties -= 1;
+                Count -= 1;
             return wasRemoved;
         }
 
@@ -141,10 +137,10 @@ namespace TranslatorBot.Modules.Utils
         {
             bool wasRemoved = _data.Remove(propertyName, out propertyValue!);
             if (wasRemoved)
-                _numberOfPropreties -= 1;
+                Count -= 1;
             return wasRemoved;
         }
-        
+
         public void TrimExcess()
         {
             _data.TrimExcess();
@@ -164,7 +160,7 @@ namespace TranslatorBot.Modules.Utils
         {
             bool wasFound = _data.TryGetValue(propertyName, out string propertyValue);
             return wasFound ? propertyValue : defaultValue;
-        } 
+        }
 
         public bool SetValue(string propertyName, string value)
         {
@@ -190,7 +186,8 @@ namespace TranslatorBot.Modules.Utils
             {
                 using StreamReader reader = new(path);
                 string fileContents = reader.ReadToEnd();
-                (Dictionary<string, string> data, int numberOfPropreties) parserResponse = ParseContentsFromFile(fileContents);
+                (Dictionary<string, string> data, int numberOfPropreties) parserResponse =
+                    ParseContentsFromFile(fileContents);
                 reader.Close();
 
                 return parserResponse;
@@ -218,28 +215,27 @@ namespace TranslatorBot.Modules.Utils
             string currentPropertyName = "";
             bool isEscaped = false;
             bool isInProperty = false;
-            
+
             foreach (char c in contents)
-            {
-                isEscaped = ParseCharacters(c, isEscaped, currentValueLoader, data, ref isInProperty, 
+                isEscaped = ParseCharacters(c, isEscaped, currentValueLoader, data, ref isInProperty,
                     ref numberOfProperties, ref currentPropertyName, ref isPropertyName, ref isPropertyValue);
-            }
 
             if (isPropertyName)
             {
-                if (isInProperty) 
+                if (isInProperty)
                     currentPropertyName = currentValueLoader.ToString();
 
                 bool wasAdded = data.TryAdd(currentPropertyName, "");
-                
+
                 if (wasAdded)
                     numberOfProperties += 1;
             }
-            
+
             return (data, numberOfProperties);
         }
 
-        private static bool ParseCharacters(char c, bool isEscaped, StringBuilder currentValueLoader, Dictionary<string, string> data,
+        private static bool ParseCharacters(char c, bool isEscaped, StringBuilder currentValueLoader,
+            Dictionary<string, string> data,
             ref bool isInProprety, ref int numberOfPropreties, ref string currentPropretyName, ref bool isPropretyName,
             ref bool isPropretyValue)
         {
@@ -250,7 +246,8 @@ namespace TranslatorBot.Modules.Utils
                     break;
                 case '"' when !isEscaped && isInProprety:
                 {
-                    (numberOfPropreties, currentPropretyName) = AdjustForPropretyClosing(currentValueLoader, isPropretyName,
+                    (numberOfPropreties, currentPropretyName) = AdjustForPropretyClosing(currentValueLoader,
+                        isPropretyName,
                         currentPropretyName, isPropretyValue, data, numberOfPropreties, out isInProprety);
                     break;
                 }
@@ -268,7 +265,8 @@ namespace TranslatorBot.Modules.Utils
             return isEscaped;
         }
 
-        private static (bool, bool) ParseRegularChar(bool isInProprety, StringBuilder currentValueLoader, char c, bool isEscaped)
+        private static (bool, bool) ParseRegularChar(bool isInProprety, StringBuilder currentValueLoader, char c,
+            bool isEscaped)
         {
             if (isInProprety)
             {
@@ -280,7 +278,8 @@ namespace TranslatorBot.Modules.Utils
             return (isInProprety, isEscaped);
         }
 
-        private static (bool, bool) AdjustForPropretyEntry(bool isPropretyName, bool isPropretyValue, out bool isInProprety)
+        private static (bool, bool) AdjustForPropretyEntry(bool isPropretyName, bool isPropretyValue,
+            out bool isInProprety)
         {
             if (isPropretyName)
             {
@@ -337,11 +336,11 @@ namespace TranslatorBot.Modules.Utils
                 string propretyValue = proprety.Value;
                 dataRepresentationBuilder.AppendLine($"\"{propretyName}\":\"{propretyValue}\"");
             }
-            
+
             string dataRepresentation = dataRepresentationBuilder.ToString();
             return dataRepresentation;
         }
-        
+
         public bool Save()
         {
             if (!FileExists()) return false;

@@ -1,23 +1,26 @@
 ﻿namespace TranslatorBot.Modules.Translation
 {
     /// <summary>
-    /// Provides static methods to convert between different language representations and codes.
+    ///     Provides static methods to convert between different language representations and codes.
     /// </summary>
     public static class LanguageModelConversions
     {
         /// <summary>
-        /// Converts a <see cref="string"/> representing a language into a <see cref="Language"/>.
-        /// Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
-        /// characters present in the string are not taken into account when identifying the language.
-        /// Both language names and language codes are parsable.
+        ///     Converts a <see cref="string" /> representing a language into a <see cref="Language" />.
+        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
+        ///     characters present in the string are not taken into account when identifying the language.
+        ///     Both language names and language codes are parsable.
         /// </summary>
-        /// <param name="str">The <see cref="string"/> which represents the language to parse into a <see cref="Language"/>
+        /// <param name="str">
+        ///     The <see cref="string" /> which represents the language to parse into a <see cref="Language" />
         /// </param>
-        /// <returns>The parsed <see cref="Language"/>.
-        /// If the language string is "detect", "auto" or "autodetect" in its basic <see cref="string"/>,
-        /// the function will return <see cref="Language.AUTO_DETECT"/> meaning this isn't a language specifically
-        /// but one which has to be detected by the translation engine.
-        /// If the language can't be identified, the function will return <see cref="Language.UNKNOWN"/></returns>
+        /// <returns>
+        ///     The parsed <see cref="Language" />.
+        ///     If the language string is "detect", "auto" or "autodetect" in its basic <see cref="string" />,
+        ///     the function will return <see cref="Language.AUTO_DETECT" /> meaning this isn't a language specifically
+        ///     but one which has to be detected by the translation engine.
+        ///     If the language can't be identified, the function will return <see cref="Language.UNKNOWN" />
+        /// </returns>
         public static Language ConvertToLanguage(string str)
         {
             string strPure = Utils.RemoveUndesiredSymbols(str);
@@ -96,17 +99,20 @@
         }
 
         /// <summary>
-        /// Converts a string representing a language as its string into its language code.
-        /// Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
-        /// characters present in the string are not taken into account when identifying the language.
+        ///     Converts a string representing a language as its string into its language code.
+        ///     Case is ignored. '\n' (new line character), '\t' (tabulation character), ' ', '-' and '_'
+        ///     characters present in the string are not taken into account when identifying the language.
         /// </summary>
-        /// <param name="languageStr">A <see cref="string"/> representing a language.
-        /// This must be a language name and not the language code.</param>
-        /// <returns>The corresponding language code.
-        /// If the language string is "detect", "auto" or "autodetect" in its basic <see cref="string"/>,
-        /// the function will return "AUTOMATIC" meaning this isn't a language specifically
-        /// but one which has to be detected by the translation engine.
-        /// If the language can't be identified, the function will return "UNKNOWN".
+        /// <param name="languageStr">
+        ///     A <see cref="string" /> representing a language.
+        ///     This must be a language name and not the language code.
+        /// </param>
+        /// <returns>
+        ///     The corresponding language code.
+        ///     If the language string is "detect", "auto" or "autodetect" in its basic <see cref="string" />,
+        ///     the function will return "AUTOMATIC" meaning this isn't a language specifically
+        ///     but one which has to be detected by the translation engine.
+        ///     If the language can't be identified, the function will return "UNKNOWN".
         /// </returns>
         public static string ConvertToLanguageCode(string languageStr)
         {
@@ -160,14 +166,16 @@
         }
 
         /// <summary>
-        /// Converts a <see cref="Language"/> into its corresponding language code.
+        ///     Converts a <see cref="Language" /> into its corresponding language code.
         /// </summary>
-        /// <param name="language">The <see cref="Language"/> to convert.</param>
-        /// <returns>The corresponding language code.
-        /// "AUTOMATIC" corresponds to <see cref="Language.AUTO_DETECT"/> and represents a
-        /// language which has to be identified by the engine.
-        /// "UNKNOWN" corresponds to <see cref="Language.UNKNOWN"/> an
-        /// unrecognized language.</returns>
+        /// <param name="language">The <see cref="Language" /> to convert.</param>
+        /// <returns>
+        ///     The corresponding language code.
+        ///     "AUTOMATIC" corresponds to <see cref="Language.AUTO_DETECT" /> and represents a
+        ///     language which has to be identified by the engine.
+        ///     "UNKNOWN" corresponds to <see cref="Language.UNKNOWN" /> an
+        ///     unrecognized language.
+        /// </returns>
         public static string ConvertToLanguageCode(Language language)
         {
             string convertedLanguageCode = language switch
@@ -207,10 +215,14 @@
         }
 
         /// <summary>
-        /// Converts a language code to its corresponding language name. Case doesn't matter.
+        ///     Converts a language code to its corresponding language name. Case doesn't matter.
         /// </summary>
-        /// <param name="languageCode">The language code.</param>
-        /// <returns>The language name. "UNKNOWN" if the name wasn't recognized.</returns>
+        /// <param name="languageCode">
+        ///     The language code.
+        /// </param>
+        /// <returns>
+        ///     The language name. "UNKNOWN" if the name wasn't recognized.
+        /// </returns>
         public static string ConvertToLanguageName(string languageCode)
         {
             string languageCodeUpper = languageCode.ToUpper();
@@ -250,15 +262,19 @@
         }
 
         /// <summary>
-        /// Converts a <see cref="Language"/> to its language name.
+        ///     Converts a <see cref="Language" /> to its language name.
         /// </summary>
-        /// <param name="language">the <see cref="Language"/> to convert.</param>
-        /// <returns>The equivalent language name for the <see cref="Language"/>.
-        /// If the <see cref="Language"/> is <see cref="Language.UNKNOWN"/> or can't be matched because the enum access index
-        /// is too great, the function will return "UNKNOWN" which represents
-        /// a language which is not recognized. If the language <see cref="Language.AUTO_DETECT"/>,
-        /// the function will return "AUTOMATIC" which indicates a language which has to be detected by
-        /// the translation engine.</returns>
+        /// <param name="language">
+        ///     The <see cref="Language" /> to convert.
+        /// </param>
+        /// <returns>
+        ///     The equivalent language name for the <see cref="Language" />.
+        ///     If the <see cref="Language" /> is <see cref="Language.UNKNOWN" /> or can't be matched because the enum access index
+        ///     is too great, the function will return "UNKNOWN" which represents
+        ///     a language which is not recognized. If the language <see cref="Language.AUTO_DETECT" />,
+        ///     the function will return "AUTOMATIC" which indicates a language which has to be detected by
+        ///     the translation engine.
+        /// </returns>
         public static string ConvertToLanguageName(Language language)
         {
             string convertedLanguageCode = language switch

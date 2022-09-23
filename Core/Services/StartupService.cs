@@ -10,30 +10,30 @@ using Microsoft.Extensions.Configuration;
 namespace TranslatorBot.Services;
 
 /// <summary>
-/// Service run at startup to initialize all key services and fetch configurations.
-/// Does not handle logging.
+///     Service run at startup to initialize all key services and fetch configurations.
+///     Does not handle logging.
 /// </summary>
 public class StartupService
 {
     /// <summary>
-    /// The <see cref="CommandService"/> _commands attribute
-    /// handles user commands.
+    ///     The <see cref="CommandService" /> _commands attribute
+    ///     handles user commands.
     /// </summary>
     private readonly CommandService _commands;
-        
+
     /// <summary>
-    /// The <see cref="IConfigurationRoot"/> _config attribute stores the
-    /// bot's configuration. 
+    ///     The <see cref="IConfigurationRoot" /> _config attribute stores the
+    ///     bot's configuration.
     /// </summary>
     private readonly IConfigurationRoot _config;
-        
+
     /// <summary>
-    /// Represents the discord account associated with the bot.
+    ///     Represents the discord account associated with the bot.
     /// </summary>
     private readonly DiscordSocketClient _discord;
-        
+
     /// <summary>
-    /// The service provider used by other services in the code.
+    ///     The service provider used by other services in the code.
     /// </summary>
     private readonly IServiceProvider _provider;
 
@@ -49,12 +49,11 @@ public class StartupService
         _discord = discord;
         _commands = commands;
     }
-        
+
     /// <summary>
-    /// Starts services, logs in and loads module.
+    ///     Starts services, logs in and loads module.
     /// </summary>
     /// <exception cref="Exception">If the bot token is empty, an exception is thrown.</exception>
-
     public async Task StartAsync()
     {
         string discordToken = _config["tokens:discord"]; // Get the discord token from the config file

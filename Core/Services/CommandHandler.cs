@@ -10,8 +10,8 @@ namespace TranslatorBot.Services
     {
         private readonly CommandService _commands;
         private readonly IConfigurationRoot _config;
-        internal readonly DiscordSocketClient Discord;
         private readonly IServiceProvider _provider;
+        internal readonly DiscordSocketClient Discord;
 
         // DiscordSocketClient, CommandService, IConfigurationRoot, and IServiceProvider are injected automatically from the IServiceProvider
         public CommandHandler(DiscordSocketClient discord, CommandService commands, IConfigurationRoot config,
@@ -29,8 +29,8 @@ namespace TranslatorBot.Services
         {
             if (s is not SocketUserMessage msg) return; // Ensure the message is from a user/bot
             if (msg.Author.Id == Discord.CurrentUser.Id) return; // Ignore self when checking commands
-            
-            
+
+
             SocketCommandContext context = new SocketCommandContext(Discord, msg); // Create the command context
 
             int argPos = 0; // Check if the message has a valid command prefix

@@ -23,7 +23,7 @@ namespace TranslatorBot.Modules.Translation
         /// </returns>
         internal static string RemoveUndesiredSymbols(string input, char[] undesiredSymbols = null)
         {
-            undesiredSymbols ??= new [] { '\n', '\t', ' ', '-', '_', '(', ')' };
+            undesiredSymbols ??= new[] { '\n', '\t', ' ', '-', '_', '(', ')' };
             HashSet<char> undesiredSymbolsSet = BuildUndesiredSymbolsHashSet(undesiredSymbols);
             StringBuilder purgedStringBuilder = new StringBuilder();
 
@@ -50,17 +50,19 @@ namespace TranslatorBot.Modules.Translation
         }
 
         /// <summary>
-        /// Divide a piece of text into segments that aren't longer than a specified length.
-        /// The function attempts to put the most sentences it can in the specified block sizes.
-        /// Though it only puts whole sentences inside such blocks.
-        /// It will cut off early if it can't fit the sentence in.
-        /// Also after starting a new block, any whitespace in front of the first sentence is cleared.
+        ///     Divide a piece of text into segments that aren't longer than a specified length.
+        ///     The function attempts to put the most sentences it can in the specified block sizes.
+        ///     Though it only puts whole sentences inside such blocks.
+        ///     It will cut off early if it can't fit the sentence in.
+        ///     Also after starting a new block, any whitespace in front of the first sentence is cleared.
         /// </summary>
         /// <param name="text">The text to divide up.</param>
         /// <param name="maxLength">The length of the blocks. By default, this value is set to 1024.</param>
-        /// <param name="initialText">An optional initialText that will be inserted at the beginning
-        /// and counted as part of the first block.</param>
-        /// <returns>A <see cref="List{T}"/> containing strings which are the divided up blocks.</returns>
+        /// <param name="initialText">
+        ///     An optional initialText that will be inserted at the beginning
+        ///     and counted as part of the first block.
+        /// </param>
+        /// <returns>A <see cref="List{T}" /> containing strings which are the divided up blocks.</returns>
         internal static List<string> DivideUpTextIntoFragmentsNicely(string text, int maxLength = 1024,
             string initialText = "")
         {
@@ -76,9 +78,7 @@ namespace TranslatorBot.Modules.Translation
             while (index < target)
             {
                 if (localIndex % maxLength == 0 && localIndex != 0)
-                {
                     localIndex = SplitTextUpNicely(maxLength, segmentBuilder, segments, ref lastPeriod);
-                }
 
                 char charToPlace = text[textIndex];
                 if (charToPlace == '.')
@@ -88,7 +88,7 @@ namespace TranslatorBot.Modules.Translation
                 localIndex += 1;
                 textIndex += 1;
             }
-            
+
             string segment = segmentBuilder.ToString();
             segments.Add(segment);
 
@@ -96,16 +96,17 @@ namespace TranslatorBot.Modules.Translation
         }
 
         /// <summary>
-        /// A helper function for <see cref="DivideUpTextIntoFragmentsNicely"/>. The role of this sub function
-        /// is to divide up the text nicely as described in the <see cref="DivideUpTextIntoFragmentsNicely"/> function.
-        /// It also updates all necessary objects.
+        ///     A helper function for <see cref="DivideUpTextIntoFragmentsNicely" />. The role of this sub function
+        ///     is to divide up the text nicely as described in the <see cref="DivideUpTextIntoFragmentsNicely" /> function.
+        ///     It also updates all necessary objects.
         /// </summary>
         /// <param name="maxLength">The maximum size of the blocks</param>
-        /// <param name="segmentBuilder">The <see cref="StringBuilder"/> used to build the current block.</param>
-        /// <param name="segments">The current <see cref="List{T}"/> of blocks.</param>
+        /// <param name="segmentBuilder">The <see cref="StringBuilder" /> used to build the current block.</param>
+        /// <param name="segments">The current <see cref="List{T}" /> of blocks.</param>
         /// <param name="lastPeriod">The index in the text of the last period.</param>
         /// <returns>The new value for the local index which is the current index inside the current block.</returns>
-        private static int SplitTextUpNicely(int maxLength, StringBuilder segmentBuilder, List<string> segments, ref int lastPeriod)
+        private static int SplitTextUpNicely(int maxLength, StringBuilder segmentBuilder, List<string> segments,
+            ref int lastPeriod)
         {
             string removedChars = "";
             int numberOfRemovedChars = 0;
