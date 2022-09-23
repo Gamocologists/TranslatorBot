@@ -1,13 +1,11 @@
 ﻿using System.Threading.Tasks;
-using TranslatorBot;
 
-namespace GamocologistBot
+namespace TranslatorBot;
+
+internal static class Program
 {
-    internal static class Program
+    public static Task Main(string[] args)
     {
-        public static Task Main(string[] args)
-        {
-            return Startup.RunAsync(args);
-        }
+        return Startup.RunAsync(args);
     }
 }

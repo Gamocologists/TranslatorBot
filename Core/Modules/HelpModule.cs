@@ -5,74 +5,73 @@ using Discord;
 using Discord.Commands;
 using Microsoft.Extensions.Configuration;
 
-namespace TranslatorBot.Modules
+namespace TranslatorBot.Modules;
+
+/// <summary>
+///     This is the bot's help module and contains the logic for help commands.
+/// </summary>
+public class HelpModule : ModuleBase<SocketCommandContext>
 {
     /// <summary>
-    ///     This is the bot's help module and contains the logic for help commands.
+    ///     The <see cref="IConfigurationRoot" /> used for the bot.
     /// </summary>
-    public class HelpModule : ModuleBase<SocketCommandContext>
+    private readonly IConfigurationRoot _config;
+
+    /// <summary>
+    ///     The <see cref="CommandService" /> operated by the bot.
+    /// </summary>
+    private readonly CommandService _service;
+
+    /// <summary>
+    ///     A simple constructor for the <see cref="HelpModule" />.
+    ///     It takes in the bot's <see cref="CommandService" /> and <see cref="IConfigurationRoot" /> configuration data
+    ///     and initializes the respective values in the object.
+    /// </summary>
+    /// <param name="service">
+    ///     The command service the bot uses for commands.
+    /// </param>
+    /// <param name="config">
+    ///     The configuration data for the bot.
+    /// </param>
+    public HelpModule(CommandService service, IConfigurationRoot config)
     {
-        /// <summary>
-        ///     The <see cref="IConfigurationRoot" /> used for the bot.
-        /// </summary>
-        private readonly IConfigurationRoot _config;
+        _service = service;
+        _config = config;
+    }
 
-        /// <summary>
-        ///     The <see cref="CommandService" /> operated by the bot.
-        /// </summary>
-        private readonly CommandService _service;
-
-        /// <summary>
-        ///     A simple constructor for the <see cref="HelpModule" />.
-        ///     It takes in the bot's <see cref="CommandService" /> and <see cref="IConfigurationRoot" /> configuration data
-        ///     and initializes the respective values in the object.
-        /// </summary>
-        /// <param name="service">
-        ///     The command service the bot uses for commands.
-        /// </param>
-        /// <param name="config">
-        ///     The configuration data for the bot.
-        /// </param>
-        public HelpModule(CommandService service, IConfigurationRoot config)
+    /// <summary>
+    ///     Send an embed containing the help declared before each function in other command modules.
+    /// </summary>
+    [Command("help")]
+    public async Task HelpAsync()
+    {
+        string prefix = _config["prefix"];
+        EmbedBuilder builder = new EmbedBuilder
         {
-            _service = service;
-            _config = config;
-        }
+            Color = new Color(114, 137, 218),
+            Description = "Available Commands"
+        };
 
-        /// <summary>
-        ///     Send an embed containing the help declared before each function in other command modules.
-        /// </summary>
-        [Command("help")]
-        public async Task HelpAsync()
+        foreach (ModuleInfo module in _service.Modules)
         {
-            string prefix = _config["prefix"];
-            EmbedBuilder builder = new EmbedBuilder
+            StringBuilder descriptionBuilder = new StringBuilder();
+            foreach (CommandInfo cmd in module.Commands)
             {
-                Color = new Color(114, 137, 218),
-                Description = "Available Commands"
-            };
-
-            foreach (ModuleInfo module in _service.Modules)
-            {
-                StringBuilder descriptionBuilder = new StringBuilder();
-                foreach (CommandInfo cmd in module.Commands)
-                {
-                    var result = await cmd.CheckPreconditionsAsync(Context);
-                    if (result.IsSuccess)
-                        descriptionBuilder.Append($"{prefix}{cmd.Aliases.First()}\n");
-                }
-
-                string description = descriptionBuilder.ToString();
-                if (!string.IsNullOrWhiteSpace(description))
-                    builder.AddField(x =>
-                    {
-                        x.Name = module.Name;
-                        x.Value = description;
-                        x.IsInline = false;
-                    });
+                var result = await cmd.CheckPreconditionsAsync(Context);
+                if (result.IsSuccess)
+                    descriptionBuilder.Append($"{prefix}{cmd.Aliases.First()}\n");
             }
 
-            await ReplyAsync("", false, builder.Build());
+            string description = descriptionBuilder.ToString();
+            if (!string.IsNullOrWhiteSpace(description))
+                builder.AddField(x =>
+                {
+                    x.Name = module.Name;
+                    x.Value = description;
+                    x.IsInline = false;
+                });
         }
+
+        await ReplyAsync("", false, builder.Build());
     }
 }
