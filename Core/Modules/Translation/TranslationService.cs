@@ -82,7 +82,7 @@ public static class TranslationService
     private static Translator? TranslatorSetUp()
     {
         DataAssociation dataAssociation =
-            DataAssociation.FromFile("../../../Modules/Translation/translator_data.txt");
+            DataAssociation.FromFile("../../../Modules/Translation/Data/translator_data.txt");
         bool wasObtained = dataAssociation.TryGetValue("DeepL authKey", out string authenticationKey);
         if (wasObtained)
             try
