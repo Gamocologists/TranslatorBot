@@ -4,8 +4,8 @@ namespace TranslatorBot;
 
 internal static class Program
 {
-    public static Task Main(string[] args)
+    public static Task Main()
     {
-        return Startup.RunAsync(args);
+        return Startup.RunBotAsync();
     }
 }

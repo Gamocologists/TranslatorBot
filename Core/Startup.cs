@@ -11,7 +11,7 @@ namespace TranslatorBot;
 
 public class Startup
 {
-    public Startup(string[] args)
+    public Startup()
     {
         string baseDirectory = AppContext.BaseDirectory;
         string configFilePath = $"{baseDirectory}/../../../";
@@ -23,9 +23,9 @@ public class Startup
 
     public IConfigurationRoot Configuration { get; }
 
-    public static async Task RunAsync(string[] args)
+    public static async Task RunBotAsync()
     {
-        Startup startup = new(args);
+        Startup startup = new();
         await startup.RunAsync();
     }
 
