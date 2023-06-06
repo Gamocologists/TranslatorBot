@@ -36,7 +36,6 @@ public class Startup
 
         ServiceProvider provider = services.BuildServiceProvider(); // Build the service provider
         provider.GetRequiredService<LoggingService>(); // Start the logging service
-        provider.GetRequiredService<CommandHandler>(); // Start the command handler service
 
         // Start the startup service and keep the program alive
         await provider.GetRequiredService<StartupService>().StartAsync();
@@ -61,7 +60,6 @@ public class Startup
                 LogLevel = LogSeverity.Verbose, // Tell the logger to give Verbose amount of info
                 DefaultRunMode = RunMode.Async // Force all commands to run async by default
             }))
-            .AddSingleton<CommandHandler>() // Add the command handler to the collection
             .AddSingleton<StartupService>() // Add startup service to the collection
             .AddSingleton<LoggingService>() // Add logging service to the collection
             .AddSingleton<Random>() // Add random to the collection
