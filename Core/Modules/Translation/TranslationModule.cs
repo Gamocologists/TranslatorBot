@@ -1,43 +1,33 @@
 ﻿using System.Threading.Tasks;
 using Discord;
-using Discord.Commands;
 
 namespace TranslatorBot.Modules.Translation;
 
-[Name("Translation")]
-[Summary("Automatic, quick and simple translation")]
-public class TranslationModule : ModuleBase<SocketCommandContext>
+public class TranslationModule
 {
-    [Command("translate", RunMode = RunMode.Async)]
-    [Summary("Translates text from the automatically detected language to another language")]
-    public async Task Translate(string targetLanguage, params string[] text)
+    public async Task<Embed> Translate(string targetLanguage, params string[] text)
     {
-        await TranslateFrom("autodetect", targetLanguage, text);
+        return await TranslateFrom("autodetect", targetLanguage, text);
     }
-
-    [Command("translatefrom", RunMode = RunMode.Async)]
-    [Summary("Translates text from a specified language to another language")]
-    public async Task TranslateFrom(string inputLanguage, string targetLanguage, params string[] text)
+    
+    public async Task<Embed> TranslateFrom(string inputLanguage, string targetLanguage, params string[] text)
     {
         if (!TranslationService.IsTranslatorOperational)
         {
             Embed failedApiEmbed = EmbedGenerator.GenerateApiConnectionErrorEmbed();
-            await ReplyAsync(embed: failedApiEmbed);
-            return;
+            return failedApiEmbed;
         }
 
         if (text.Length == 0)
         {
             Embed emptyTextEmbed = EmbedGenerator.GenerateEmptyTextEmbed();
-            await ReplyAsync(embed: emptyTextEmbed);
-            return;
+            return emptyTextEmbed;
         }
 
         if (await TranslationService.HasReachedCap())
         {
             Embed reachedLimitEmbed = EmbedGenerator.GenerateLimitReachedEmbed();
-            await ReplyAsync(embed: reachedLimitEmbed);
-            return;
+            return reachedLimitEmbed;
         }
 
         string languageCodeSource = LanguageModelConversions.ConvertToLanguageCode(inputLanguage);
@@ -49,7 +39,7 @@ public class TranslationModule : ModuleBase<SocketCommandContext>
         if (languageCodeDestination == "UNKNOWN")
         {
             Embed unknownLanguageEmbed = EmbedGenerator.GenerateUnknownLanguageEmbed(targetLanguage);
-            await ReplyAsync(embed: unknownLanguageEmbed);
+            return unknownLanguageEmbed;
         }
         else
         {
@@ -60,17 +50,14 @@ public class TranslationModule : ModuleBase<SocketCommandContext>
                 EmbedGenerator.GenerateTranslationResultEmbed(languageCodeSource, languageCodeDestination,
                     languageCodeSource == "AUTOMATIC",
                     translationResult);
-            await ReplyAsync(embed: translatedTextEmbedBuilder);
+            return translatedTextEmbedBuilder;
         }
     }
 
-    [Command("reconnecttodeepl", RunMode = RunMode.Async)]
-    [RequireUserPermission(GuildPermission.Administrator)]
-    [Summary("Attempts to reconnect to the DeepL Translation API's servers")]
-    public async Task ReconnectToTranslationApi()
+    public Embed ReconnectToTranslationApi()
     {
         bool isReconnectionSuccess = TranslationService.ReconnectToDeepL();
         Embed reconnectionAttemptResultEmbed = EmbedGenerator.GenerateReconnectionEmbed(isReconnectionSuccess);
-        await ReplyAsync(embed: reconnectionAttemptResultEmbed);
+        return reconnectionAttemptResultEmbed;
     }
 }

@@ -6,6 +6,8 @@ using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.Configuration;
+using TranslatorBot.Data;
+using TranslatorBot.Modules.Translation;
 
 namespace TranslatorBot.Services;
 
@@ -64,7 +66,42 @@ public class StartupService
         await _discord.LoginAsync(TokenType.Bot, discordToken); // Login to discord
         await _discord.StartAsync(); // Connect to the websocket
 
+        _discord.Ready += async () =>
+        {
+            await _discord.SetStatusAsync(UserStatus.Online);
+            Game game = GenerateRichPresence();
+            await _discord.SetActivityAsync(game);
+            await AddSlashCommands();
+            await Task.CompletedTask;
+        };
+
+        _discord.SlashCommandExecuted += async command =>
+        {
+            EmbedBuilder embedBuilder = new ();
+            embedBuilder.Fields.Add(new EmbedFieldBuilder() {Name = "LanguageCode", Value = command.UserLocale});
+            await command.RespondAsync(embeds: new []{embedBuilder.Build()});
+        };
+        
         await _commands.AddModulesAsync(Assembly.GetEntryAssembly(),
             _provider); // Load commands and modules into the command service
+    }
+
+    private async Task AddSlashCommands()
+    {
+        SlashCommandProperties translateCommandProperties = SlashCommandGenerator.GenerateTranslationSlashCommand();
+        SlashCommandProperties translateFromCommandProperties =
+            SlashCommandGenerator.GenerateTranslationFromSlashCommand();
+        SlashCommandProperties reconnectToDeepLCommandProperties =
+            SlashCommandGenerator.GenerateReconnectToDeepLSlashCommand();
+        
+        await _discord.CreateGlobalApplicationCommandAsync(translateCommandProperties);
+        await _discord.CreateGlobalApplicationCommandAsync(translateFromCommandProperties);
+        await _discord.CreateGlobalApplicationCommandAsync(reconnectToDeepLCommandProperties);
+    }
+
+    private Game GenerateRichPresence()
+    {
+        Game game = new ("Translating");
+        return game;
     }
 }
