@@ -74,6 +74,11 @@ public enum Language
     ///     Represents the Hungarian language.
     /// </summary>
     HUNGARIAN,
+    
+    /// <summary>
+    ///     Represents the Indonesian language.
+    /// </summary>
+    INDONESIAN,
 
     /// <summary>
     ///     Represents the Italian language.
@@ -84,6 +89,11 @@ public enum Language
     ///     Represents the Japanese language.
     /// </summary>
     JAPANESE,
+    
+    /// <summary>
+    ///     Represents the Korean language.
+    /// </summary>
+    KOREAN,
 
     /// <summary>
     ///     Represents the Latvian language.
@@ -94,6 +104,11 @@ public enum Language
     ///     Represents the Lithuanian language.
     /// </summary>
     LITHUANIAN,
+    
+    /// <summary>
+    ///     Represents the Norwegian language.
+    /// </summary>
+    NORWEGIAN,
 
     /// <summary>
     ///     Represents the Polish language.
@@ -139,6 +154,16 @@ public enum Language
     ///     Represents the Swedish language.
     /// </summary>
     SWEDISH,
+    
+    /// <summary>
+    ///     Represents the Turkish language.
+    /// </summary>
+    TURKISH,
+    
+    /// <summary>
+    ///     Represents the Ukrainian language.
+    /// </summary>
+    UKRAINIAN,
 
     /// <summary>
     ///     Represents a language which has not been identified.
