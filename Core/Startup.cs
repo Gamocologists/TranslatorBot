@@ -9,8 +9,15 @@ using TranslatorBot.Services;
 
 namespace TranslatorBot;
 
+/// <summary>
+///     The class which starts and runs the bot.
+/// </summary>
 public class Startup
 {
+    /// <summary>
+    ///     The constructor for the startup class.
+    ///     This is where the configuration is loaded.
+    /// </summary>
     public Startup()
     {
         string baseDirectory = AppContext.BaseDirectory;
@@ -21,17 +28,26 @@ public class Startup
         Configuration = builder.Build();
     }
 
+    /// <summary>
+    ///     The configuration for the bot. Includes the token and optionally the prefix or other settings.
+    /// </summary>
     public IConfigurationRoot Configuration { get; }
 
+    /// <summary>
+    ///     The method which starts the bot.
+    /// </summary>
     public static async Task RunBotAsync()
     {
         Startup startup = new();
         await startup.RunAsync();
     }
 
+    /// <summary>
+    ///     The method which runs the bot.
+    /// </summary>
     public async Task RunAsync()
     {
-        ServiceCollection services = new ServiceCollection(); // Create a new instance of a service collection
+        ServiceCollection services = new(); // Create a new instance of a service collection
         ConfigureServices(services);
 
         ServiceProvider provider = services.BuildServiceProvider(); // Build the service provider
@@ -42,6 +58,12 @@ public class Startup
         await Task.Delay(-1);
     }
 
+    /// <summary>
+    ///     The method which configures the services for the bot.
+    /// </summary>
+    /// <param name="services">
+    ///     The service collection which will be used to configure the services.
+    /// </param>
     private void ConfigureServices(IServiceCollection services)
     {
         DiscordSocketClient bot = new DiscordSocketClient(new DiscordSocketConfig
