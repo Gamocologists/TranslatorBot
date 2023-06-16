@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Discord;
+using TranslatorBot.Data.Translations;
 
 namespace TranslatorBot.Modules.Translation;
 
@@ -16,26 +16,27 @@ public static class EmbedGenerator
     /// <param name="languageInput">
     ///     The language provided and not recognized.
     /// </param>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     The generated embed.
     /// </returns>
-    internal static Embed GenerateUnknownLanguageEmbed(string languageInput)
+    internal static Embed GenerateUnknownLanguageEmbed(string languageInput, string languageCode)
     {
         EmbedBuilder unknownLanguageEmbedBuilder = BuildBotEmbedBase();
         unknownLanguageEmbedBuilder.Color = Color.Red;
+        
+        string fieldName = LocalizationHandler.GetEmbedFieldTitle("Unknown Language", languageCode);
+        string fieldValue = LocalizationHandler.GetEmbedFieldValue("Unknown Language", languageCode);
 
         EmbedFieldBuilder unknownLanguageField = new EmbedFieldBuilder
         {
-            Name = $"Unknown language: {languageInput}",
-            IsInline = true
+            Name = fieldName,
+            IsInline = true,
+            Value = fieldValue
         };
-        string possibleLanguages = GeneratePossibleLanguages();
-        string finalMessage = "Here are the possible languages.\n" +
-                              "Case is ignored and any spaces, new lines, tabulations, dashes, " +
-                              "underscores and brackets are also ignored:" +
-                              $"\n{possibleLanguages}";
-        Console.WriteLine(finalMessage.Length);
-        unknownLanguageField.Value = finalMessage;
+        
         unknownLanguageEmbedBuilder.AddField(unknownLanguageField);
 
         Embed finalEmbed = unknownLanguageEmbedBuilder.Build();
@@ -82,48 +83,6 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    ///     Generate a text that contains all possible languages for translation.
-    /// </summary>
-    /// <returns>
-    ///     return a string that contains all possible languages for translation.
-    /// </returns>
-    private static string GeneratePossibleLanguages()
-    {
-        StringBuilder possibleLanguages = new StringBuilder();
-        possibleLanguages.AppendLine();
-        possibleLanguages.AppendLine(":arrow_right: Bulgarian");
-        possibleLanguages.AppendLine(":arrow_right: Chinese");
-        possibleLanguages.AppendLine(":arrow_right: Czech");
-        possibleLanguages.AppendLine(":arrow_right: Danish");
-        possibleLanguages.AppendLine(":arrow_right: Dutch");
-        possibleLanguages.AppendLine(":arrow_right: English");
-        possibleLanguages.AppendLine(":arrow_right: English (US) or English (United States)");
-        possibleLanguages.AppendLine(":arrow_right: English (GB) or English (Great Britain)");
-        possibleLanguages.AppendLine(":arrow_right: Estonian");
-        possibleLanguages.AppendLine(":arrow_right: Finnish");
-        possibleLanguages.AppendLine(":arrow_right: French");
-        possibleLanguages.AppendLine(":arrow_right: German");
-        possibleLanguages.AppendLine(":arrow_right: Greek");
-        possibleLanguages.AppendLine(":arrow_right: Hungarian");
-        possibleLanguages.AppendLine(":arrow_right: Italian");
-        possibleLanguages.AppendLine(":arrow_right: Japanese");
-        possibleLanguages.AppendLine(":arrow_right: Latvian");
-        possibleLanguages.AppendLine(":arrow_right: Lithuanian");
-        possibleLanguages.AppendLine(":arrow_right: Polish");
-        possibleLanguages.AppendLine(":arrow_right: Portuguese");
-        possibleLanguages.AppendLine(":arrow_right: Portuguese Brazil or Portuguese (BZ)");
-        possibleLanguages.AppendLine(":arrow_right: Portuguese Portugal or Portuguese (PT)");
-        possibleLanguages.AppendLine(":arrow_right: Romanian");
-        possibleLanguages.AppendLine(":arrow_right: Russian");
-        possibleLanguages.AppendLine(":arrow_right: Slovak");
-        possibleLanguages.AppendLine(":arrow_right: Slovenian");
-        possibleLanguages.AppendLine(":arrow_right: Spanish");
-        possibleLanguages.AppendLine(":arrow_right: Swedish");
-        string possibleLanguagesStr = possibleLanguages.ToString();
-        return possibleLanguagesStr;
-    }
-
-    /// <summary>
     ///     Generates a text containing the translation result
     /// </summary>
     /// <param name="languageCodeSource">
@@ -142,11 +101,14 @@ public static class EmbedGenerator
     ///     The second element of the tuple is a <see cref="string" /> which contains the language code of the detected
     ///     language of the text that was given to be translated.
     /// </param>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     Return an <see cref="Embed" /> that contains the translation result.
     /// </returns>
     internal static Embed GenerateTranslationResultEmbed(string languageCodeSource, string languageCodeDestination,
-        bool isAutomatic, (string translatedText, string detectedSourceLanguageCode) translationResult)
+        bool isAutomatic, (string translatedText, string detectedSourceLanguageCode) translationResult, string languageCode)
     {
         EmbedBuilder translationResultEmbedBuilder = BuildBotEmbedBase();
         translationResultEmbedBuilder.Color = Color.DarkGreen;
@@ -161,7 +123,9 @@ public static class EmbedGenerator
         {
             string detectedLanguage =
                 LanguageModelConversions.ConvertToLanguageName(translationResult.detectedSourceLanguageCode);
-            languageField = $"(Automatically Detected) {detectedLanguage}** --> **{destinationLanguage}";
+            languageField = LocalizationHandler.GetEmbedCustomLocalization("TranslationResult", "field_title_automatically_detected.json", languageCode);
+            languageField = languageField.Replace("%detectedLanguage%", detectedLanguage);
+            languageField = languageField.Replace("%destinationLanguage%", destinationLanguage);
         }
         else
         {
@@ -172,7 +136,8 @@ public static class EmbedGenerator
         List<string> segmentedText = Utils.DivideUpTextIntoFragmentsNicely(
             translationResult.translatedText);
         int numberOfSegments = segmentedText.Count;
-        translatedTextField.Name = $"\nTranslated Text: {languageField}";
+        translatedTextField.Name = LocalizationHandler.GetEmbedCustomLocalization("TranslationResult", "field_title.json", languageCode);
+        translatedTextField.Name = translatedTextField.Name.Replace("%languageField%", languageField);
         if (numberOfSegments == 0)
             segmentedText.Add(" ");
         translatedTextField.Value = $"{segmentedText[0]}";
@@ -196,21 +161,27 @@ public static class EmbedGenerator
     /// <summary>
     ///     Generates a message that indicates that the API's 500000 character/month translation limit has been reached.
     /// </summary>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     An <see cref="Embed" /> that indicates that the API's 500000 character/month translation limit has been reached.
     /// </returns>
-    internal static Embed GenerateLimitReachedEmbed()
+    internal static Embed GenerateLimitReachedEmbed(string languageCode)
     {
         EmbedBuilder limitReachedEmbedBuilder = BuildBotEmbedBase();
         limitReachedEmbedBuilder.Color = Color.Orange;
 
+        string nameField = LocalizationHandler.GetEmbedFieldTitle("TranslationLimitReached", languageCode);
+        string valueField = LocalizationHandler.GetEmbedFieldValue("TranslationLimitReached", languageCode);
+
         EmbedFieldBuilder limitReachedField = new EmbedFieldBuilder
         {
-            Name = "Translation Limit Reached",
+            Name = nameField,
             IsInline = false,
-            Value = "This bot uses an api which is limited to 500 000 characters per month.\n" +
-                    "The limit has been reached and thus no more translations will be performed until the end of the month."
+            Value = valueField
         };
+        
         limitReachedEmbedBuilder.AddField(limitReachedField);
 
         Embed limitReachedEmbed = limitReachedEmbedBuilder.Build();
@@ -220,22 +191,26 @@ public static class EmbedGenerator
     /// <summary>
     ///     Generates a response to a translation request where no text was provided for translation.
     /// </summary>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     An <see cref="Embed" /> containing a response to a translation request
     ///     where no text was provided for translation.
     /// </returns>
-    internal static Embed GenerateEmptyTextEmbed()
+    internal static Embed GenerateEmptyTextEmbed(string languageCode)
     {
         EmbedBuilder limitReachedEmbedBuilder = BuildBotEmbedBase();
         limitReachedEmbedBuilder.Color = Color.Red;
+        
+        string nameField = LocalizationHandler.GetEmbedFieldTitle("EmptyText", languageCode);
+        string valueField = LocalizationHandler.GetEmbedFieldValue("EmptyText", languageCode);
 
         EmbedFieldBuilder emptyTextFieldBuilder = new EmbedFieldBuilder
         {
-            Name = "Nothing provided for translation",
+            Name = nameField,
             IsInline = false,
-            Value = "Okay Dude, look at me in the eyes :eyes: straight in the eyes:\n" +
-                    "how do you expect me translate the absence of text, meaning, hopes and dreams?\n" +
-                    "I can't translate something which doesn't exist.\n\n"
+            Value = valueField
         };
 
         limitReachedEmbedBuilder.AddField(emptyTextFieldBuilder);
@@ -247,21 +222,26 @@ public static class EmbedGenerator
     /// <summary>
     ///     Generates a message informing that the API wasn't successfully
     /// </summary>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     An <see cref="Embed" /> containing a message informing that the authentication
     ///     key was missing for the API.
     /// </returns>
-    internal static Embed GenerateApiConnectionErrorEmbed()
+    internal static Embed GenerateApiConnectionErrorEmbed(string languageCode)
     {
         EmbedBuilder apiErrorConnectionErrorEmbedBuilder = BuildBotEmbedBase();
         apiErrorConnectionErrorEmbedBuilder.Color = Color.DarkRed;
+        
+        string apiConnectionErrorTitle = LocalizationHandler.GetEmbedFieldTitle("ApiConnectionError", languageCode);
+        string apiConnectionErrorValue = LocalizationHandler.GetEmbedFieldValue("ApiConnectionError", languageCode);
 
         EmbedFieldBuilder apiConnectionErrorFieldBuilder = new EmbedFieldBuilder
         {
-            Name = "Authentication for translation API missing",
+            Name = apiConnectionErrorTitle,
             IsInline = false,
-            Value = "The Gamocolgists uses the DeepL API for translation.\n" +
-                    "The link to the API has encountered issues and is not operational."
+            Value = apiConnectionErrorValue
         };
 
         apiErrorConnectionErrorEmbedBuilder.AddField(apiConnectionErrorFieldBuilder);
@@ -271,25 +251,35 @@ public static class EmbedGenerator
     }
 
     /// <summary>
-    ///     Generates a message informing that the API wasn't successfully
+    ///     Generates a message informing that the API was or wasn't successfully reconnected.
     /// </summary>
+    /// <param name="wasSuccessful">
+    ///     A boolean indicating whether the reconnection was successful or not.
+    /// </param>
+    /// <param name="languageCode">
+    ///     The language code which dictates the language of the embed.
+    /// </param>
     /// <returns>
     ///     An <see cref="Embed" /> containing a message informing that the authentication
     ///     key was missing for the API.
     /// </returns>
-    internal static Embed GenerateReconnectionEmbed(bool wasSuccessful)
+    internal static Embed GenerateReconnectionEmbed(bool wasSuccessful, string languageCode)
     {
         EmbedBuilder reconnectionEmbedBuilder = BuildBotEmbedBase();
+        
+        string reconnectionTitle = wasSuccessful
+            ? LocalizationHandler.GetEmbedFieldTitle("ReconnectionSuccess", languageCode)
+            : LocalizationHandler.GetEmbedFieldTitle("ReconnectionFailure", languageCode);
+        
+        string reconnectionValue = wasSuccessful
+            ? LocalizationHandler.GetEmbedFieldValue("ReconnectionSuccess", languageCode)
+            : LocalizationHandler.GetEmbedFieldValue("ReconnectionFailure", languageCode);
 
         EmbedFieldBuilder reconnectionEmbedField = new EmbedFieldBuilder
         {
-            Name = wasSuccessful
-                ? "Reconnection to DeepL API was successful."
-                : "Authentication failure when reconnecting to DeepL API.",
+            Name = reconnectionTitle,
             IsInline = false,
-            Value = wasSuccessful
-                ? "The reconnection to the DeepL API servers was successful."
-                : "The bot failed to reconnect to the DeepL API servers."
+            Value = reconnectionValue
         };
 
         reconnectionEmbedBuilder.Color = wasSuccessful ? Color.DarkGreen : Color.Red;
