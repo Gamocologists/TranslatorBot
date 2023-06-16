@@ -3,14 +3,14 @@ using Discord;
 
 namespace TranslatorBot.Modules.Translation;
 
-public class TranslationModule
+public static class TranslationModule
 {
-    public async Task<Embed> Translate(string targetLanguage, params string[] text)
+    public static async Task<Embed> Translate(string targetLanguage, string languageCode, params string[] text)
     {
         return await TranslateFrom("autodetect", targetLanguage, text);
     }
     
-    public async Task<Embed> TranslateFrom(string inputLanguage, string targetLanguage, params string[] text)
+    public static async Task<Embed> TranslateFrom(string inputLanguage, string targetLanguage, string languageCode, params string[] text)
     {
         if (!TranslationService.IsTranslatorOperational)
         {
@@ -54,7 +54,7 @@ public class TranslationModule
         }
     }
 
-    public Embed ReconnectToTranslationApi()
+    public static Embed ReconnectToTranslationApi(string languageCode)
     {
         bool isReconnectionSuccess = TranslationService.ReconnectToDeepL();
         Embed reconnectionAttemptResultEmbed = EmbedGenerator.GenerateReconnectionEmbed(isReconnectionSuccess);
