@@ -5,9 +5,19 @@ using TranslatorBot.Data.Translations;
 
 namespace TranslatorBot.Modules.Translation;
 
+/// <summary>
+///     Slash command generator for the translation module.
+/// </summary>
 public static class SlashCommandGenerator
 {
 
+    /// <summary>
+    ///     Generates the translate slash command with translates text from the automatically detected language
+    ///     to another specified language.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="SlashCommandProperties"/> object containing the translate slash command.
+    /// </returns>
     public static SlashCommandProperties GenerateTranslationSlashCommand()
     {
         SlashCommandBuilder translateCommandBuilder = new ();
@@ -30,6 +40,13 @@ public static class SlashCommandGenerator
         return translateCommandProperties;
     }
     
+    /// <summary>
+    ///     Generates the translate-from slash command with translates text from a specified language
+    ///     to another specified language.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="SlashCommandProperties"/> object containing the translate-from slash command.
+    /// </returns>
     public static SlashCommandProperties GenerateTranslationFromSlashCommand()
     {
         SlashCommandBuilder translateCommandBuilder = new ();
@@ -53,6 +70,12 @@ public static class SlashCommandGenerator
         return translateCommandProperties;
     }
 
+    /// <summary>
+    ///     Generates the reconnect-to-deepl slash command to attempt to reconnect to the DeepL Translation API's servers.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="SlashCommandProperties"/> object containing the reconnect-to-deepl slash command.
+    /// </returns>
     public static SlashCommandProperties GenerateReconnectToDeepLSlashCommand()
     {
         SlashCommandBuilder reconnectToDeepLCommandBuilder = new ();
@@ -69,6 +92,12 @@ public static class SlashCommandGenerator
         return reconnectToDeepLCommandProperties;
     }
 
+    /// <summary>
+    ///     Generates the text option used in the translate slash command and the translate-from slash command.
+    /// </summary>
+    /// <returns>
+    ///     A <see cref="SlashCommandOptionBuilder"/> object containing the text option.
+    /// </returns>
     private static SlashCommandOptionBuilder BuildTextOption()
     {
         SlashCommandOptionBuilder textOptionBuilder = new ();
@@ -86,6 +115,18 @@ public static class SlashCommandGenerator
         return textOptionBuilder;
     }
 
+    /// <summary>
+    ///      Generates the language option used in the translate slash command and the translate-from slash command.
+    /// </summary>
+    /// <param name="originatingCommand">
+    ///      The name of the command that the language option is being generated for.
+    /// </param>
+    /// <param name="isTargetLanguage">
+    ///      Whether the language option is for the target language or the source language.
+    /// </param>
+    /// <returns>
+    ///      A <see cref="SlashCommandOptionBuilder"/> object containing the language option.
+    /// </returns>
     private static SlashCommandOptionBuilder BuildLanguageOption(string originatingCommand, bool isTargetLanguage)
     {
         SlashCommandOptionBuilder targetLanguageOptionBuilder = new ();
@@ -115,6 +156,16 @@ public static class SlashCommandGenerator
         return targetLanguageOptionBuilder;
     }
 
+    /// <summary>
+    ///     Gets the choices for the language option used in the translate slash command and the translate-from slash command.
+    /// </summary>
+    /// <param name="targetLanguage">
+    ///     Whether the language option is for the target language or the source language.
+    /// </param>
+    /// <returns>
+    ///     A <see cref="Dictionary{TKey,TValue}"/> object containing the choices for the language option.
+    ///     The key is the name of the language, and the value is a tuple containing the name of the language and the value of the language.
+    /// </returns>
     private static Dictionary<string, (string name, string value)> GetChoicesForLanguages(bool targetLanguage = true)
     {
         Dictionary<string, (string name, string value)> choices = new();
