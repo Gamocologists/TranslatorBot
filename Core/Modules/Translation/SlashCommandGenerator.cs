@@ -33,7 +33,7 @@ public static class SlashCommandGenerator
     public static SlashCommandProperties GenerateTranslationFromSlashCommand()
     {
         SlashCommandBuilder translateCommandBuilder = new ();
-        translateCommandBuilder.WithName("translate from");
+        translateCommandBuilder.WithName("translate-from");
         translateCommandBuilder.WithDescription("Translates text from a specified language to another language");
 
         Dictionary<string, string> nameLocalizations = LocalizationHandler.GetCommandNameLocalization("translate");
@@ -56,7 +56,7 @@ public static class SlashCommandGenerator
     public static SlashCommandProperties GenerateReconnectToDeepLSlashCommand()
     {
         SlashCommandBuilder reconnectToDeepLCommandBuilder = new ();
-        reconnectToDeepLCommandBuilder.WithName("reconnect to deepl");
+        reconnectToDeepLCommandBuilder.WithName("reconnect-to-deepl");
         reconnectToDeepLCommandBuilder.WithDescription("Attempts to reconnect to the DeepL Translation API's servers");
         
         Dictionary<string, string> nameLocalizations = LocalizationHandler.GetCommandNameLocalization("reconnect to deepl");
@@ -89,18 +89,18 @@ public static class SlashCommandGenerator
     private static SlashCommandOptionBuilder BuildLanguageOption(string originatingCommand, bool isTargetLanguage)
     {
         SlashCommandOptionBuilder targetLanguageOptionBuilder = new ();
-        targetLanguageOptionBuilder.WithName(isTargetLanguage ? "target language" : "source language");
+        targetLanguageOptionBuilder.WithName(isTargetLanguage ? "target-language" : "source-language");
         targetLanguageOptionBuilder.WithDescription(isTargetLanguage ? "The language to translate the text to" : 
             "The language of the text to translate");
         targetLanguageOptionBuilder.WithRequired(true);
         targetLanguageOptionBuilder.WithType(ApplicationCommandOptionType.String);
 
-        string parameterName = isTargetLanguage ? "target language" : "source language";
+        string parameterName = isTargetLanguage ? "target-language" : "source-language";
         
         Dictionary<string, string> nameLocalizations = LocalizationHandler.GetCommandParameterNameLocalization(originatingCommand, parameterName);
         Dictionary<string, string> descriptionLocalizations = LocalizationHandler.GetCommandParameterDescriptionLocalization(originatingCommand, parameterName);
         
-        Dictionary<string, (string name, int value)> choices = GetChoicesForLanguages(isTargetLanguage);
+        Dictionary<string, (string name, string value)> choices = GetChoicesForLanguages(isTargetLanguage);
 
         List<Choice> targetLanguageChoices = LocalizationHandler.GetCommandParameterChoicesLocalization(originatingCommand, parameterName, choices);
 
@@ -115,64 +115,69 @@ public static class SlashCommandGenerator
         return targetLanguageOptionBuilder;
     }
 
-    private static Dictionary<string, (string name, int value)> GetChoicesForLanguages(bool targetLanguage = true)
+    private static Dictionary<string, (string name, string value)> GetChoicesForLanguages(bool targetLanguage = true)
     {
-        Dictionary<string, (string name, int value)> choices = new();
+        Dictionary<string, (string name, string value)> choices = new();
 
         int offset = 0;
         
         if (!targetLanguage)
         {
-            choices.Add("AutoDetected", ("Auto - Detected", 0));
+            choices.Add("AutoDetected", ("Auto - Detected", "autodetected"));
         }
         
-        choices.Add("Bulgarian", ("Bulgarian", 1));
-        choices.Add("Chinese", ("Chinese", 2));
-        choices.Add("Czech", ("Czech", 3));
-        choices.Add("Danish", ("Danish", 4));
-        choices.Add("Dutch", ("Dutch", 5));
+        //choices.Add("Bulgarian", ("Bulgarian", "bulgarian"));
+        offset += 1;
+        choices.Add("Chinese", ("Chinese", "chinese"));
+        //choices.Add("Czech", ("Czech", "czech"));
+        offset += 1;
+        choices.Add("Danish", ("Danish", "danish"));
+        choices.Add("Dutch", ("Dutch", "dutch"));
         if (targetLanguage)
         {
-            choices.Add("EnglishBritish", ("English (British)", 6));
-            choices.Add("EnglishAmerican", ("English (American)", 7));
+            choices.Add("EnglishBritish", ("English (British)", "englishgb"));
+            choices.Add("EnglishAmerican", ("English (American)", "englishus"));
         }
         else
         {
-            choices.Add("English", ("English", 6));
-            offset = 1;
+            choices.Add("English", ("English", "english"));
+            offset += 1;
         }
-        choices.Add("Estonian", ("Estonian", 8 - offset));
-        choices.Add("Finnish", ("Finnish", 9 - offset));
-        choices.Add("French", ("French", 10 - offset));
-        choices.Add("German", ("German", 11 - offset));
-        choices.Add("Greek", ("Greek", 12 - offset));
-        choices.Add("Hungarian", ("Hungarian", 13 - offset));
-        choices.Add("Indonesian", ("Indonesian", 14 - offset));
-        choices.Add("Italian", ("Italian", 15 - offset));
-        choices.Add("Japanese", ("Japanese", 16 - offset));
-        choices.Add("Korean", ("Korean", 17 - offset));
-        choices.Add("Latvian", ("Latvian", 18 - offset));
-        choices.Add("Lithuanian", ("Lithuanian", 19 - offset));
-        choices.Add("Norwegian", ("Norwegian", 20 - offset));
-        choices.Add("Polish", ("Polish", 21 - offset));
+        //choices.Add("Estonian", ("Estonian", "estonian"));
+        offset += 1;
+        choices.Add("Finnish", ("Finnish", "finnish"));
+        choices.Add("French", ("French", "french"));
+        choices.Add("German", ("German", "german"));
+        choices.Add("Greek", ("Greek", "greek"));
+        choices.Add("Hungarian", ("Hungarian", "hungarian"));
+        choices.Add("Indonesian", ("Indonesian", "indonesian"));
+        choices.Add("Italian", ("Italian", "italian"));
+        choices.Add("Japanese", ("Japanese", "japanese"));
+        choices.Add("Korean", ("Korean", "korean"));
+        //choices.Add("Latvian", ("Latvian", "latvian"));
+        //choices.Add("Lithuanian", ("Lithuanian", "lithuanian"));
+        //choices.Add("Norwegian", ("Norwegian", "norwegian"));
+        offset += 3;
+        choices.Add("Polish", ("Polish", "polish"));
         if (targetLanguage)
         {
-            choices.Add("PortugueseBrazil", ("Portuguese (Brazilian)", 22));
-            choices.Add("PortuguesePortugal", ("Portuguese (European)", 23));
+            choices.Add("PortugueseBrazil", ("Portuguese (Brazilian)", "portuguesebz"));
+            choices.Add("PortuguesePortugal", ("Portuguese (European)", "portuguesept"));
         }
         else
         {
-            choices.Add("Portuguese", ("Portuguese", 22));
-            offset = 2;
+            choices.Add("Portuguese", ("Portuguese", "portuguese"));
+            offset += 1;
         }
-        choices.Add("Romanian", ("Romanian", 24 - offset));
-        choices.Add("Russian", ("Russian", 25 - offset));
-        choices.Add("Slovak", ("Slovak", 26 - offset));
-        choices.Add("Slovenian", ("Slovenian", 27 - offset));
-        choices.Add("Spanish", ("Spanish", 28 - offset));
-        choices.Add("Swedish", ("Swedish", 29 - offset));
-        choices.Add("Turkish", ("Turkish", 30 - offset));
-        choices.Add("Ukrainian", ("Ukrainian", 31 - offset));
+        choices.Add("Romanian", ("Romanian", "romanian"));
+        choices.Add("Russian", ("Russian", "russian"));
+        //choices.Add("Slovak", ("Slovak", "slovak"));
+        //choices.Add("Slovenian", ("Slovenian", "slovenian"));
+        offset += 2;
+        choices.Add("Spanish", ("Spanish", "spanish"));
+        choices.Add("Swedish", ("Swedish", "swedish"));
+        choices.Add("Turkish", ("Turkish", "turkish"));
+        choices.Add("Ukrainian", ("Ukrainian", "ukrainian"));
 
         return choices;
     }
