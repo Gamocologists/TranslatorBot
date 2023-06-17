@@ -119,18 +119,14 @@ public static class SlashCommandGenerator
     {
         Dictionary<string, (string name, string value)> choices = new();
 
-        int offset = 0;
-        
         if (!targetLanguage)
         {
             choices.Add("AutoDetected", ("Auto - Detected", "autodetected"));
         }
         
         //choices.Add("Bulgarian", ("Bulgarian", "bulgarian"));
-        offset += 1;
         choices.Add("Chinese", ("Chinese", "chinese"));
         //choices.Add("Czech", ("Czech", "czech"));
-        offset += 1;
         choices.Add("Danish", ("Danish", "danish"));
         choices.Add("Dutch", ("Dutch", "dutch"));
         if (targetLanguage)
@@ -141,10 +137,8 @@ public static class SlashCommandGenerator
         else
         {
             choices.Add("English", ("English", "english"));
-            offset += 1;
         }
         //choices.Add("Estonian", ("Estonian", "estonian"));
-        offset += 1;
         choices.Add("Finnish", ("Finnish", "finnish"));
         choices.Add("French", ("French", "french"));
         choices.Add("German", ("German", "german"));
@@ -157,7 +151,6 @@ public static class SlashCommandGenerator
         //choices.Add("Latvian", ("Latvian", "latvian"));
         //choices.Add("Lithuanian", ("Lithuanian", "lithuanian"));
         //choices.Add("Norwegian", ("Norwegian", "norwegian"));
-        offset += 3;
         choices.Add("Polish", ("Polish", "polish"));
         if (targetLanguage)
         {
@@ -167,13 +160,11 @@ public static class SlashCommandGenerator
         else
         {
             choices.Add("Portuguese", ("Portuguese", "portuguese"));
-            offset += 1;
         }
         choices.Add("Romanian", ("Romanian", "romanian"));
         choices.Add("Russian", ("Russian", "russian"));
         //choices.Add("Slovak", ("Slovak", "slovak"));
         //choices.Add("Slovenian", ("Slovenian", "slovenian"));
-        offset += 2;
         choices.Add("Spanish", ("Spanish", "spanish"));
         choices.Add("Swedish", ("Swedish", "swedish"));
         choices.Add("Turkish", ("Turkish", "turkish"));
