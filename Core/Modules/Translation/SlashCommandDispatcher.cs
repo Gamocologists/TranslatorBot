@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Interactions;
 using Discord.WebSocket;
 
 namespace TranslatorBot.Modules.Translation;
@@ -11,46 +10,44 @@ public static class SlashCommandDispatcher
     public static async Task ExecuteSlashCommand(SocketSlashCommand slashCommand)
     {
         SocketSlashCommandData data = slashCommand.Data;
-        switch (data.Name)
+        if (data.Name == "translate")
         {
-            case "translate":
+            await CheckTranslateCommand(data);
+
+            (bool isSuccess, string targetLanguage, string text) translateResult =
                 await CheckTranslateCommand(data);
 
-                (bool isSuccess, string targetLanguage, string text) translateResult = 
-                    await CheckTranslateCommand(data);
-                
-                if (translateResult.isSuccess)
-                {
-                    Embed embed = await TranslationModule.Translate(translateResult.targetLanguage, slashCommand.UserLocale, translateResult.text);
-                    await slashCommand.RespondAsync(embed: embed);
-                }
-                break;
-            case "translate-from":
-                
-                (bool isSuccess, string sourceLanguage, string targetLanguage, string text) translateFromCommand = 
-                    await CheckTranslateFromCommand(data);
-                
-                if (translateFromCommand.isSuccess)
-                {
-                    Embed embed = await TranslationModule.TranslateFrom(translateFromCommand.sourceLanguage,
-                        translateFromCommand.targetLanguage,
-                        slashCommand.UserLocale, translateFromCommand.text);
-                    await slashCommand.RespondAsync(embed: embed);
-                }
-                break;
-            case "reconnect-to-deepl":
+            if (translateResult.isSuccess)
             {
-                if (data.Options.Count == 0)
-                {
-                    Embed embed = TranslationModule.ReconnectToTranslationApi(slashCommand.UserLocale);
-                    await slashCommand.RespondAsync(embed: embed);
-                }
-
-                break;
+                Embed embed = await TranslationModule.Translate(translateResult.targetLanguage, slashCommand.UserLocale,
+                    translateResult.text);
+                await slashCommand.RespondAsync(embed: embed);
             }
-            default:
-                await Console.Out.WriteLineAsync($"Unknown slash command: {slashCommand.Data.Name}");
-                break;
+        }
+        else if (data.Name == "translate-from")
+        {
+            (bool isSuccess, string sourceLanguage, string targetLanguage, string text) translateFromCommand =
+                await CheckTranslateFromCommand(data);
+
+            if (translateFromCommand.isSuccess)
+            {
+                Embed embed = await TranslationModule.TranslateFrom(translateFromCommand.sourceLanguage,
+                    translateFromCommand.targetLanguage,
+                    slashCommand.UserLocale, translateFromCommand.text);
+                await slashCommand.RespondAsync(embed: embed);
+            }
+        }
+        else if (data.Name == "reconnect-to-deepl" && data.Options.Count == 0)
+        {
+            Embed embed = TranslationModule.ReconnectToTranslationApi(slashCommand.UserLocale);
+                await slashCommand.RespondAsync(embed: embed);
+        }
+        else
+        {
+            string message = data.Name == "reconnect-to-deepl"
+                ? "No options"
+                : $"Unknown slash command: {slashCommand.Data.Name}";
+            await Console.Out.WriteLineAsync(message);
         }
     }
 
@@ -65,8 +62,8 @@ public static class SlashCommandDispatcher
 
         int index = 0;
 
-        SocketSlashCommandDataOption targetLanguageOption = null;
-        SocketSlashCommandDataOption textOption = null;
+        SocketSlashCommandDataOption? targetLanguageOption = null;
+        SocketSlashCommandDataOption? textOption = null;
         foreach (SocketSlashCommandDataOption socketSlashCommandDataOption in data.Options)
         {
             if (index == 0)
@@ -102,9 +99,9 @@ public static class SlashCommandDispatcher
 
         int index = 0;
 
-        SocketSlashCommandDataOption sourceLanguageOption = null;
-        SocketSlashCommandDataOption targetLanguageOption = null;
-        SocketSlashCommandDataOption textOption = null;
+        SocketSlashCommandDataOption? sourceLanguageOption = null;
+        SocketSlashCommandDataOption? targetLanguageOption = null;
+        SocketSlashCommandDataOption? textOption = null;
         foreach (SocketSlashCommandDataOption socketSlashCommandDataOption in data.Options)
         {
             if (index == 0)
@@ -136,7 +133,7 @@ public static class SlashCommandDispatcher
         SocketSlashCommandDataOption targetLanguageOption, 
         SocketSlashCommandDataOption textOption)
     {
-        if (targetLanguageOption!.Name != "target-language")
+        if (targetLanguageOption.Name != "target-language")
         {
             await Console.Out.WriteLineAsync(
                 $"Expected name target-language, got {targetLanguageOption.Name}");
@@ -156,7 +153,7 @@ public static class SlashCommandDispatcher
             return (false, "", "");
         }
         
-        if (textOption!.Name != "text")
+        if (textOption.Name != "text")
         {
             await Console.Out.WriteLineAsync(
                 $"Expected name text, got {textOption.Name}");
@@ -184,7 +181,7 @@ public static class SlashCommandDispatcher
         SocketSlashCommandDataOption targetLanguageOption, 
         SocketSlashCommandDataOption textOption)
     {
-        if (sourceLanguageOption!.Name != "source-language")
+        if (sourceLanguageOption.Name != "source-language")
         {
             await Console.Out.WriteLineAsync(
                 $"Expected name source-language, got {sourceLanguageOption.Name}");
@@ -204,7 +201,7 @@ public static class SlashCommandDispatcher
             return (false, "", "", "");
         }
         
-        if (targetLanguageOption!.Name != "target-language")
+        if (targetLanguageOption.Name != "target-language")
         {
             await Console.Out.WriteLineAsync(
                 $"Expected name target-language, got {targetLanguageOption.Name}");
@@ -224,7 +221,7 @@ public static class SlashCommandDispatcher
             return (false, "", "", "");
         }
         
-        if (textOption!.Name != "text")
+        if (textOption.Name != "text")
         {
             await Console.Out.WriteLineAsync(
                 $"Expected name text, got {textOption.Name}");
