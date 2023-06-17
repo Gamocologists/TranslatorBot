@@ -295,18 +295,18 @@ public static class LocalizationHandler
     }
 
     public static List<Choice> GetCommandParameterChoicesLocalization(string originatingCommand, string parameter,
-        Dictionary<string, (string name, int value)> choices)
+        Dictionary<string, (string name, string value)> choices)
     {
         List<Choice> results = new();
         
-        foreach (KeyValuePair<string, (string name, int value)> choice in choices)
+        foreach (KeyValuePair<string, (string name, string value)> choice in choices)
         {
             string path = GetCommandParameterChoiceLocalizationPath(originatingCommand, parameter, choice.Key, true);
             
             Dictionary<string, string> localization = RetrieveLocalizationAtPath(path);
             
             string name = choice.Value.name;
-            int value = choice.Value.value;
+            string value = choice.Value.value;
             
             // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
             if (localization.ContainsKey("en-US"))
@@ -325,6 +325,87 @@ public static class LocalizationHandler
     {
         string path = GetCommandParameterLocalizationPath(originatingCommand, parameter, createIfNotExists);
         
-        return Path.Combine(path, "OPTIONS", choice);
+        return Path.Combine(path, "OPTIONS", choice, "translations.json");
+    }
+
+    private static string GetEmbedPath(string embedName)
+    {
+        return Path.Combine(BasePath, "EMBEDS", embedName);
+    }
+    
+    private static string GetEmbedFieldTitlePath(string embedName)
+    {
+        return Path.Combine(GetEmbedPath(embedName), "field_title.json");
+    }
+    
+    private static string GetEmbedFieldValuePath(string embedName)
+    {
+        return Path.Combine(GetEmbedPath(embedName), "field_value.json");
+    }
+
+    public static string GetEmbedFieldTitle(string embedName, string languageCode)
+    {
+        string path = GetEmbedFieldTitlePath(embedName);
+        
+        return GetLocalization(path, languageCode);
+    }
+    
+    public static string GetEmbedFieldValue(string embedName, string languageCode)
+    {
+        string path = GetEmbedFieldValuePath(embedName);
+        
+        return GetLocalization(path, languageCode);
+    }
+
+    private static string GetLocalization(string path, string languageCode)
+    {
+        Dictionary<string, string> localization = RetrieveLocalizationAtPath(path);
+        
+        // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
+        if (localization.ContainsKey(languageCode))
+        {
+            return localization[languageCode];
+        }
+        
+        // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
+        if (localization.ContainsKey("en-US"))
+        {
+            return localization["en-US"];
+        }
+        
+        return "UNLOCALIZED";
+    }
+
+    public static string GetEmbedCustomLocalization(string embedName, string fieldName, string languageCode)
+    {
+        string path = GetEmbedCustomLocalizationPath(embedName, fieldName, true);
+        
+        Dictionary<string, string> localization = RetrieveLocalizationAtPath(path);
+        
+        // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
+        if (localization.ContainsKey(languageCode))
+        {
+            return localization[languageCode];
+        }
+        
+        // ReSharper disable once CanSimplifyDictionaryLookupWithTryGetValue
+        if (localization.ContainsKey("en-US"))
+        {
+            return localization["en-US"];
+        }
+        
+        return "UNLOCALIZED";
+    }
+
+    private static string GetEmbedCustomLocalizationPath(string embedName, string fieldName, bool createIfNotExists)
+    {
+        string path = GetEmbedPath(embedName);
+        
+        if (createIfNotExists)
+        {
+            Directory.CreateDirectory(path);
+        }
+        
+        return Path.Combine(path, fieldName);
     }
 }
