@@ -53,8 +53,8 @@ public static class SlashCommandGenerator
         translateCommandBuilder.WithName("translate-from");
         translateCommandBuilder.WithDescription("Translates text from a specified language to another language");
 
-        Dictionary<string, string> nameLocalizations = LocalizationHandler.GetCommandNameLocalization("translate");
-        Dictionary<string, string> descriptionLocalizations = LocalizationHandler.GetCommandDescriptionLocalization("translate");
+        Dictionary<string, string> nameLocalizations = LocalizationHandler.GetCommandNameLocalization("translate from");
+        Dictionary<string, string> descriptionLocalizations = LocalizationHandler.GetCommandDescriptionLocalization("translate from");
 
         translateCommandBuilder.WithNameLocalizations(nameLocalizations);
         translateCommandBuilder.WithDescriptionLocalizations(descriptionLocalizations);
