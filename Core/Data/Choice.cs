@@ -7,11 +7,11 @@ public class Choice
 {
     public string Name { get; }
     
-    public int Value { get; }
+    public string Value { get; }
     
     public Dictionary<string, string> Localizations { get; } = GenerateDefaultLocalizations();
     
-    public Choice(string name, int value, Dictionary<string, string> localizations)
+    public Choice(string name, string value, Dictionary<string, string> localizations)
     {
         Name = name;
         Value = value;
