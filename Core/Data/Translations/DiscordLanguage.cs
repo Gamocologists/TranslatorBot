@@ -2,6 +2,9 @@ using System;
 
 namespace TranslatorBot.Data.Translations;
 
+/// <summary>
+///     Represents a language that can be used on discord and is supported by the localization system.
+/// </summary>
 public enum DiscordLanguage
 {
     DANISH,
@@ -36,8 +39,26 @@ public enum DiscordLanguage
     KOREAN
 }
 
+/// <summary>
+///     Provides helper methods for <see cref="DiscordLanguage" />.
+///     These methods are used to convert a <see cref="DiscordLanguage" /> to a string that can be used by the localization
+///     system.
+///     The reverse conversion is supported.
+/// </summary>
 public static class DiscordLanguageToStringService
 {
+    /// <summary>
+    ///     Returns the language code that can be used by the localization system.
+    /// </summary>
+    /// <param name="discordLanguage">
+    ///     The <see cref="DiscordLanguage" /> to convert to a language code.
+    /// </param>
+    /// <returns>
+    ///     The language code that can be used by the localization system.
+    /// </returns>
+    /// <exception cref="ArgumentOutOfRangeException">
+    ///     Thrown when the <paramref name="discordLanguage" /> is not supported.
+    /// </exception>
     public static string GetLanguageCode(DiscordLanguage discordLanguage)
     {
         return discordLanguage switch
@@ -76,6 +97,18 @@ public static class DiscordLanguageToStringService
         };
     }
     
+    /// <summary>
+    ///     Returns the <see cref="DiscordLanguage" /> for the given language code.
+    /// </summary>
+    /// <param name="languageCode">
+    ///     The language code to convert to a <see cref="DiscordLanguage" />.
+    /// </param>
+    /// <returns>
+    ///     The <see cref="DiscordLanguage" /> for the given language code.
+    /// </returns>
+    /// <exception cref="ArgumentException">
+    ///     Thrown when the <paramref name="languageCode" /> is not supported.
+    /// </exception>
     public static DiscordLanguage GetDiscordLanguage(string languageCode)
     {
         return languageCode switch
@@ -110,7 +143,7 @@ public static class DiscordLanguageToStringService
             "ja" => DiscordLanguage.JAPANESE,
             "zh-TW" => DiscordLanguage.CHINESE_TAIWAN,
             "ko" => DiscordLanguage.KOREAN,
-            _ => throw new ArgumentOutOfRangeException(nameof(languageCode), languageCode, null)
+            _ => throw new ArgumentException($"The given language code is not supported ({languageCode}).")
         };
     }
 }
