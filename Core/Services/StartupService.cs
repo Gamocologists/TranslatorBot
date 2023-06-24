@@ -22,8 +22,9 @@ public class StartupService
 
     /// <summary>
     ///     Represents the discord account associated with the bot.
+    ///     This field is static so that it can be accessed from anywhere.
     /// </summary>
-    private readonly DiscordSocketClient _discord;
+    private static DiscordSocketClient _discord = new();
 
     /// <summary>
     ///     The constructor for the startup service.

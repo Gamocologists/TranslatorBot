@@ -68,6 +68,9 @@ public static class TranslationService
         string translatedText = translatorResponse.Text;
         string detectedLanguageCode = translatorResponse.DetectedSourceLanguageCode;
         (string text, string detectedLanguageCode) translationResult = (translatedText, detectedLanguageCode);
+
+        await StartupService.UpdateRichPresence();
+        
         return translationResult;
     }
 
