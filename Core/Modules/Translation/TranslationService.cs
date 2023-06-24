@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DeepL;
 using DeepL.Model;
 using TranslatorBot.Modules.Utils;
+using TranslatorBot.Services;
 
 namespace TranslatorBot.Modules.Translation;
 
@@ -114,5 +115,18 @@ public static class TranslationService
     {
         _translator = TranslatorSetUp();
         return IsTranslatorOperational;
+    }
+
+    public static async Task<long> GetTranslationCap()
+    {
+        if (!IsTranslatorOperational) return -2;
+        if (_translator is null) return -3;
+        Usage usage = await _translator.GetUsageAsync();
+
+        Usage.Detail? usageDetail = usage.Character;
+        if (usageDetail is null) 
+            return -1;
+        
+        return usageDetail.Count;
     }
 }

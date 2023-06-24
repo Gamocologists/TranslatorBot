@@ -61,13 +61,15 @@ public class StartupService
 
         _discord.Ready += async () =>
         {
-            IReadOnlyCollection<SocketApplicationCommand>? existingCommands = await _discord.GetGlobalApplicationCommandsAsync();
+            IReadOnlyCollection<SocketApplicationCommand>? existingCommands =
+                await _discord.GetGlobalApplicationCommandsAsync();
             foreach (SocketApplicationCommand? command in existingCommands)
             {
                 await command.DeleteAsync();
             }
+
             await _discord.SetStatusAsync(UserStatus.Online);
-            Game game = GenerateRichPresence();
+            Game game = await GenerateRichPresence();
             await _discord.SetActivityAsync(game);
             await AddSlashCommands();
             await Task.CompletedTask;
@@ -99,10 +101,18 @@ public class StartupService
     ///     The <see cref="Game" /> object representing the rich presence.
     ///     The rich presence is currently set to "Translating".
     /// </returns>
-    private Game GenerateRichPresence()
+    private async Task<Game> GenerateRichPresence()
     {
-        Game game = new ("Translating");
-        return game;
+        const long freeCap = 500000;
+
+        long cap = await TranslationService.GetTranslationCap();
+        return cap switch
+        {
+            -1 => new Game("Translating"),
+            -2 => new Game("Translation API Down"),
+            -3 => new Game("Translation Bot Error"),
+            _ => new Game($"Translating (Free: {cap}/{freeCap})")
+        };
     }
 
     /// <summary>
