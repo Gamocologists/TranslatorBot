@@ -46,7 +46,7 @@ public class StartupService
     /// <summary>
     ///     Starts services, logs in and loads module.
     /// </summary>
-    /// <exception cref="Exception">
+    /// <exception cref="FileLoadException">
     ///     If the bot token is empty, an exception is thrown.
     /// </exception>
     public async Task StartAsync()
