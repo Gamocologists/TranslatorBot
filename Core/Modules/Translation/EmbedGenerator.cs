@@ -132,9 +132,11 @@ public static class EmbedGenerator
             string sourceLanguage = LanguageModelConversions.ConvertToLanguageName(languageCodeSource);
             languageField = $"{sourceLanguage}** --> **{destinationLanguage}";
         }
+        
+        string translationResultText = translationResult.translatedText.RemoveMentions();
 
         List<string> segmentedText = Utils.DivideUpTextIntoFragmentsNicely(
-            translationResult.translatedText);
+            translationResultText);
         int numberOfSegments = segmentedText.Count;
         translatedTextField.Name = LocalizationHandler.GetEmbedCustomLocalization("TranslationResult", "field_title.json", languageCode);
         translatedTextField.Name = translatedTextField.Name.Replace("%languageField%", languageField);
