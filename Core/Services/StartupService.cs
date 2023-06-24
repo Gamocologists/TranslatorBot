@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Discord;
@@ -87,7 +86,7 @@ public class StartupService
             SlashCommandGenerator.GenerateTranslationFromSlashCommand();
         SlashCommandProperties reconnectToDeepLCommandProperties =
             SlashCommandGenerator.GenerateReconnectToDeepLSlashCommand();
-        
+
         await _discord.CreateGlobalApplicationCommandAsync(translateCommandProperties);
         await _discord.CreateGlobalApplicationCommandAsync(translateFromCommandProperties);
         await _discord.CreateGlobalApplicationCommandAsync(reconnectToDeepLCommandProperties);
@@ -103,6 +102,29 @@ public class StartupService
     private Game GenerateRichPresence()
     {
         Game game = new ("Translating");
+        return game;
+    }
+
+    /// <summary>
+    ///     Updates the rich presence for the bot.
+    /// </summary>
+    /// <returns>
+    ///     The <see cref="Game" /> object representing the rich presence.
+    /// </returns>
+    internal static async Task<Game> UpdateRichPresence()
+    {
+        const long freeCap = 500000;
+        
+        long cap = await TranslationService.GetTranslationCap();
+        Game game = cap switch
+        {
+            -1 => new Game("Translating"),
+            -2 => new Game("Translation API Down"),
+            -3 => new Game("Translation Bot Error"),
+            _ => new Game($"Translating (Free: {cap}/{freeCap})")
+        };
+        
+        await _discord.SetActivityAsync(game);
         return game;
     }
 }
