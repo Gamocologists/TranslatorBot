@@ -61,7 +61,17 @@ public static class StringExtensions
             return false;
         }
         
-        if (index - 1 >= 0 && text[index - 1] is ' ')
+        if (index - 1 == -1)
+        {
+            return true;
+        }
+
+        if (text[index - 1] is '<')
+        {
+            return true;
+        }
+        
+        if (text[index - 1] is ' ')
         {
             return index + 1 < text.Length && text[index + 1] is not ' ';
         }
