@@ -66,7 +66,7 @@ public class Startup
     /// </param>
     private void ConfigureServices(IServiceCollection services)
     {
-        DiscordSocketClient bot = new DiscordSocketClient(new DiscordSocketConfig
+        DiscordSocketClient bot = new(new DiscordSocketConfig
         {
             // Add discord to the collection
             LogLevel = LogSeverity.Verbose, // Tell the logger to give Verbose amount of info
