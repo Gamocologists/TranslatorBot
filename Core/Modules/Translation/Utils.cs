@@ -94,7 +94,7 @@ public static class Utils
                 localIndex = SplitTextUpNicely(maxLength, segmentBuilder, segments, ref lastPeriod);
 
             char charToPlace = text[textIndex];
-            if (charToPlace == '.')
+            if (charToPlace is '.' or '。')
                 lastPeriod = localIndex;
             segmentBuilder.Append(charToPlace);
             index += 1;
