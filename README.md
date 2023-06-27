@@ -28,21 +28,11 @@ A discord bot token is also required.
 ## Installation
 1. Clone this repository.
 2. Install .NET 7.0 or higher.
-3. Install the following NuGet packages:
-    - Discord.Net
-    - Discord.Net.Commands
-    - Discord.Net.Core
-    - Discord.Net.WebSocket
-    - Microsoft.Extensions.Configuration
-    - Microsoft.Extensions.Configuration.FileExtensions
-    - Microsoft.Extensions.Configuration.Json
-    - Microsoft.Extensions.DependencyInjection
-    - Microsoft.Extensions.Hosting
-    - Microsoft.Extensions.Logging
-    - Microsoft.Extensions.Logging.Console
-    - Microsoft.Extensions.Logging.Debug
-    - Microsoft.Extensions.Options.ConfigurationExtensions
-    - System.Text.Json
-4. Inside of the appsettings.json file insert your discord bot token in the 'token' field.
-5. Insert your DeepL API key in the 'deeplApiKey' field in the Modules/Translation/Data/translator_data.da file.
+3. Inside of the appsettings.json file insert your discord bot token in the 'token' field.
+4. Insert your DeepL API key in the 'deeplApiKey' field in the Modules/Translation/Data/translator_data.da file.
+5. Move to the direcotry with the Core.csproj file. 
+7. Perform the command `dotnet build --configuration Release Core.csproj`
+8. Move to the directory bin/Release/net7.0
+9. Perform the command `dotnet Core.dll`
+
 
