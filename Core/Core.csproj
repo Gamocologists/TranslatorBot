@@ -2,9 +2,9 @@
 
     <PropertyGroup>
         <OutputType>Exe</OutputType>
-        <TargetFramework>net7.0</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>TranslatorBot</RootNamespace>
-        <LangVersion>11</LangVersion>
+        <LangVersion>13</LangVersion>
         <Authors>Jasch</Authors>
         <Nullable>enable</Nullable>
     </PropertyGroup>
