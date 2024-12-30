@@ -30,7 +30,7 @@ public static class EmbedGenerator
         string fieldName = LocalizationHandler.GetEmbedFieldTitle("Unknown Language", languageCode);
         string fieldValue = LocalizationHandler.GetEmbedFieldValue("Unknown Language", languageCode);
 
-        EmbedFieldBuilder unknownLanguageField = new EmbedFieldBuilder
+        EmbedFieldBuilder unknownLanguageField = new()
         {
             Name = fieldName,
             IsInline = true,
@@ -51,7 +51,7 @@ public static class EmbedGenerator
     /// </returns>
     private static EmbedBuilder BuildBotEmbedBase()
     {
-        EmbedBuilder botEmbedBase = new EmbedBuilder
+        EmbedBuilder botEmbedBase = new()
         {
             Author = GenerateBotAuthor(),
             Color = Color.DarkBlue,
@@ -72,7 +72,7 @@ public static class EmbedGenerator
     /// </returns>
     private static EmbedAuthorBuilder GenerateBotAuthor()
     {
-        EmbedAuthorBuilder embedAuthorBuilder = new EmbedAuthorBuilder
+        EmbedAuthorBuilder embedAuthorBuilder = new()
         {
             Name = "GamoTranslate",
             IconUrl =
@@ -112,7 +112,7 @@ public static class EmbedGenerator
     {
         EmbedBuilder translationResultEmbedBuilder = BuildBotEmbedBase();
         translationResultEmbedBuilder.Color = Color.DarkGreen;
-        EmbedFieldBuilder translatedTextField = new EmbedFieldBuilder
+        EmbedFieldBuilder translatedTextField = new()
         {
             IsInline = false
         };
@@ -147,7 +147,7 @@ public static class EmbedGenerator
 
         for (int i = 1; i < numberOfSegments; i++)
         {
-            EmbedFieldBuilder segmentFieldBuilder = new EmbedFieldBuilder
+            EmbedFieldBuilder segmentFieldBuilder = new()
             {
                 Name = "\u200b",
                 IsInline = true,
@@ -177,7 +177,7 @@ public static class EmbedGenerator
         string nameField = LocalizationHandler.GetEmbedFieldTitle("TranslationLimitReached", languageCode);
         string valueField = LocalizationHandler.GetEmbedFieldValue("TranslationLimitReached", languageCode);
 
-        EmbedFieldBuilder limitReachedField = new EmbedFieldBuilder
+        EmbedFieldBuilder limitReachedField = new()
         {
             Name = nameField,
             IsInline = false,
@@ -208,7 +208,7 @@ public static class EmbedGenerator
         string nameField = LocalizationHandler.GetEmbedFieldTitle("EmptyText", languageCode);
         string valueField = LocalizationHandler.GetEmbedFieldValue("EmptyText", languageCode);
 
-        EmbedFieldBuilder emptyTextFieldBuilder = new EmbedFieldBuilder
+        EmbedFieldBuilder emptyTextFieldBuilder = new()
         {
             Name = nameField,
             IsInline = false,
@@ -239,7 +239,7 @@ public static class EmbedGenerator
         string apiConnectionErrorTitle = LocalizationHandler.GetEmbedFieldTitle("ApiConnectionError", languageCode);
         string apiConnectionErrorValue = LocalizationHandler.GetEmbedFieldValue("ApiConnectionError", languageCode);
 
-        EmbedFieldBuilder apiConnectionErrorFieldBuilder = new EmbedFieldBuilder
+        EmbedFieldBuilder apiConnectionErrorFieldBuilder = new()
         {
             Name = apiConnectionErrorTitle,
             IsInline = false,
@@ -277,7 +277,7 @@ public static class EmbedGenerator
             ? LocalizationHandler.GetEmbedFieldValue("ReconnectionSuccess", languageCode)
             : LocalizationHandler.GetEmbedFieldValue("ReconnectionFailure", languageCode);
 
-        EmbedFieldBuilder reconnectionEmbedField = new EmbedFieldBuilder
+        EmbedFieldBuilder reconnectionEmbedField = new()
         {
             Name = reconnectionTitle,
             IsInline = false,
